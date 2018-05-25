@@ -79,7 +79,7 @@ DATABASES = {
         'NAME': 'AICollege',
         'USER': 'AICollege',
         'PASSWORD': 'AICollege337845818',
-        'HOST': '127.0.0.1',
+        'HOST': '39.106.19.27',  # 这个地方将来一定要换掉
         'PORT': '3306',
     }
 }
