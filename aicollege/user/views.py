@@ -12,6 +12,7 @@ class UserForm(forms.Form):
      password = forms.CharField(label='密码', widget=forms.PasswordInput())
      email = forms.EmailField(label='邮箱')
 
+
 def index(request):
     template = loader.get_template('index.html')
     return HttpResponse(template.render(request))
@@ -56,6 +57,33 @@ def regist(request):
             User.save()
 
             return HttpResponse('注册成功！')
+    else:
+        userform = UserForm()
+    return render_to_response('login.html',{'userform':userform})
+
+def check_username(request):
+    if request.method == 'POST':
+        userform = UserForm(request.POST)
+        if userform.is_valid():
+            username = userform.cleaned_data['username']
+
+            user1 = User.objects.filter(username__exact=username)
+            if user1:
+                return HttpResponse('用户名已存在')
+    else:
+        userform = UserForm()
+    return render_to_response('login.html',{'userform':userform})
+
+
+def check_email(request):
+    if request.method == 'POST':
+        userform = UserForm(request.POST)
+        if userform.is_valid():
+            email = userform.cleaned_data['email']
+
+            user2 = User.objects.filter(email__exact=email)
+            if user2:
+                return HttpResponse('邮箱已注册')
     else:
         userform = UserForm()
     return render_to_response('login.html',{'userform':userform})
