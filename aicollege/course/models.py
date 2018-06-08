@@ -16,7 +16,7 @@ class Course(models.Model):
     students = models.ManyToManyField(Student)                       #学生与课程的关系是多对多
     pic = models.ImageField(upload_to='')                            #这一块是图片上传过来后储存到数据库中
 
-#弱实体集，课程的小结， 依赖cid
+#弱实体集，课程的小节， 依赖cid
 class Section(models.Model):
     course = models.ForeignKey(Course,on_delete=models.CASCADE)    #强实体的cid
     section_id = models.AutoField()
