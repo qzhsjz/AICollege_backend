@@ -1,16 +1,18 @@
 # Create your views here.
 from django.http import Http404,JsonResponse
 from .models import Course,Section
+from aicollege.user.models import User
 
 ##进入初始界面的时候，根据用户ID和推送算法，加载课程信息
 #根据需求返回课程信息
 
 #搜索算法搜索课程
-def searchCourse(user_id):
-    if user_id == -1:
+def searchCourse(uid):
+    if uid == -1:
         course = Course.bbjects.all()  #选取所有的课程
     else:
-        course = Course.objects.filter(students__id = user_id)  #选取uid的所有课程
+        user = User.objects.filter(user_id = uid)
+        course = Course.objects.filter(user_id = user.user_id).select_related()  #选取uid的所有课程
 
     columns = [col[0] for col in course.description]
     return [
@@ -18,14 +20,15 @@ def searchCourse(user_id):
     ]
 
 #搜索小节
-def searchSection(user_id,course_id):
-    section = Section.objects.filter(course__id = course_id,course__students__id = user_id)
+def searchSection(uid,cid):
+    user = User.objects.filter(user_id = uid)
+    course = Course.objects.filter(user_id=user.user_id).select_related()  # 选取uid的所有课程
+    section = Section.objects.filter(course_id = course.course_id).select_related()
 
     columns = [col[0] for col in section.description]
     return [
         dict(zip(columns, row)) for row in section.fetchall()
     ]
-
 
 #返回初始界面课程的信息,类似index，加入界面时返回申请
 def getCourseInfo(request):
