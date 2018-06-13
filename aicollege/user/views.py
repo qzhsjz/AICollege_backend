@@ -3,6 +3,7 @@ from django import forms
 from django.http import HttpResponse
 from .models import User
 from django.template import loader
+import json
 
 # Create your views here.
 
@@ -60,6 +61,7 @@ def regist(request):
     else:
         userform = UserForm()
     return render_to_response('login.html',{'userform':userform})
+
 
 def check_username(request):
     if request.method == 'POST':
