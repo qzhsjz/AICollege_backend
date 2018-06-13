@@ -22,7 +22,7 @@ def searchCourse(uid):
 #搜索小节
 def searchSection(uid,cid):
     user = User.objects.filter(user_id = uid)
-    course = Course.objects.filter(user_id=user.user_id).select_related()  # 选取uid的所有课程
+    course = Course.objects.filter(course_id=cid, user__user_id=user.user_id).select_related()  # 选取uid的所有课程
     section = Section.objects.filter(course_id = course.course_id).select_related()
 
     columns = [col[0] for col in section.description]
