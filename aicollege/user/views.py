@@ -12,6 +12,7 @@ class UserForm(forms.Form):
      username = forms.CharField(label='用户名', max_length=50)
      password = forms.CharField(label='密码', widget=forms.PasswordInput())
      email = forms.EmailField(label='邮箱')
+     id = forms.IntegerField(label='邀请码', max_value=1000000000)   #邀请码
 
 
 def index(request):
@@ -74,8 +75,7 @@ def check_username(request):
             if user1:
                 return HttpResponse('用户名已存在')
     else:
-        userform = UserForm()
-    return render_to_response('login.html',{'userform':userform})
+        return HttpResponse('用户名不能为空')
 
 
 def check_email(request):
@@ -88,5 +88,17 @@ def check_email(request):
             if user2:
                 return HttpResponse('邮箱已注册')
     else:
-        userform = UserForm()
-    return render_to_response('login.html',{'userform':userform})
+        return HttpResponse('邮箱不能为空')
+
+
+def check_id(request):
+    if request.method == 'POST':
+        userform = UserForm(request.POST)
+        if userform.is_valid():
+            id = userform.cleaned_data['邀请码']
+
+            user = User.objects.filter(userid__exact=id)
+            if user:
+                return json.dumps(user)
+            else:
+                return HttpResponse('没有此人')
