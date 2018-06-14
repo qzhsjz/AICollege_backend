@@ -29,14 +29,15 @@ def login(request):
             user1 = User.objects.filter(username__exact=user, password__exact=password)
             user2 = User.objects.filter(email__exact=user, password__exact=password)
 
-            if user1|user2:
-                return render_to_response('index.html', {'userform': userform})
+            if user1:
+                return json.dumps(user1)
+            if user2:
+                return json.dumps(user2)
             else:
                 return HttpResponse('用户名邮箱或密码错误,请重新登录')
-
         else:
             userform = UserForm()
-        return render_to_response('login.html', {'userform': userform})
+        return HttpResponse('不能为空')
 
 
 def regist(request):
