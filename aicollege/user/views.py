@@ -4,6 +4,9 @@ from django.http import HttpResponse
 from .models import User
 from django.template import loader
 import json
+from django.core.mail import send_mail
+from django.conf import settings
+from PIL import Image
 
 # Create your views here.
 
@@ -13,6 +16,10 @@ class UserForm(forms.Form):
      password = forms.CharField(label='密码', widget=forms.PasswordInput())
      email = forms.EmailField(label='邮箱')
      id = forms.IntegerField(label='邀请码', max_value=1000000000)   #邀请码
+     enctype = "multipart/form-data"   #头像
+
+
+count = 0
 
 
 def index(request):
@@ -48,6 +55,7 @@ def regist(request):
             username = userform.cleaned_data['username']
             password = userform.cleaned_data['password']
             email = userform.cleaned_data['email']
+            refer = userform.cleaned_data['id']
 
             user1 = User.objects.filter(username__exact=username)
             user2 = User.objects.filter(email__exact=email)
@@ -56,8 +64,12 @@ def regist(request):
             if user2:
                 return HttpResponse('邮箱已注册')
 
-            User.objects.create(username=username,password=password,email=email)
+            settings.COUNT=settings.COUNT+1   #f分配userID
+            User.objects.create(username=username,password=password,email=email,userId=settings.COUNT,referrer=refer)
             User.save()
+
+
+            #send_mail('欢迎注册小智学堂！',)
 
             return HttpResponse('注册成功！')
     else:
@@ -65,6 +77,7 @@ def regist(request):
     return render_to_response('login.html',{'userform':userform})
 
 
+#检查username
 def check_username(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
@@ -78,6 +91,7 @@ def check_username(request):
         return HttpResponse('用户名不能为空')
 
 
+#检查注册邮箱
 def check_email(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
@@ -91,6 +105,7 @@ def check_email(request):
         return HttpResponse('邮箱不能为空')
 
 
+#检查邀请人的userID信息
 def check_id(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
@@ -102,3 +117,11 @@ def check_id(request):
                 return json.dumps(user)
             else:
                 return HttpResponse('没有此人')
+
+
+def input_pic(request):
+    if(request.method == 'POST'):
+        inputpic = request.FILES['input_pic']
+        userform = UserForm(request.POST)
+        if inputpic:
+            img = Image.open(inputpic)
