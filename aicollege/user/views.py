@@ -122,6 +122,14 @@ def check_id(request):
 def input_pic(request):
     if(request.method == 'POST'):
         inputpic = request.FILES['input_pic']
-        userform = UserForm(request.POST)
+        #userform = UserForm(request.POST)
         if inputpic:
             img = Image.open(inputpic)
+            picturename = 'media/userpic'+request.username
+            img.save('media/userpic'+request.username)
+            flag = User.objects.filter(username=request.username).update(picture=picturename)
+
+            if flag:
+                return HttpResponse('上传成功')
+            else:
+                return HttpResponse('上传失败')
