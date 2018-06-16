@@ -142,3 +142,5 @@ EMAIL_SUBJECT_PREFIX = u'[小智学院]'            #为邮件Subject-line前缀
 EMAIL_USE_TLS = False                 #与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
 #管理员站点
 SERVER_EMAIL = 'xinxinyu2011@163.com'            #The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
+
+CORS_ORIGIN_ALLOW_ALL = True
