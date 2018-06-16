@@ -89,7 +89,7 @@ def email_verify(request):
         if user:
             if user[0].username == username:
                 user[0].emailVerified = True
-                user.save()
+                user[0].save()
                 return HttpResponse('验证成功！')
         else:
             return HttpResponse('验证失败')
