@@ -68,8 +68,8 @@ def regist(request):
             # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
             code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-') for i in range(0, 64)]
             code = ''.join(code)
-            User.objects.create(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer)
-            User.save()
+            newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer)
+            newuser.save()
 
 
             mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
