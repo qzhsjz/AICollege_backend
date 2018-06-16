@@ -20,9 +20,6 @@ class UserForm(forms.Form):
      enctype = "multipart/form-data"   #头像
 
 
-count = 0
-
-
 def index(request):
     template = loader.get_template('index.html')
     return HttpResponse(template.render(request))
@@ -71,7 +68,7 @@ def regist(request):
             # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
             code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-') for i in range(0, 64)]
             code = ''.join(code)
-            User.objects.create(username=username,password=password,email=email,emailVerified=False,emailCode=code,userId=settings.COUNT,referrer=refer)
+            User.objects.create(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer)
             User.save()
 
 
