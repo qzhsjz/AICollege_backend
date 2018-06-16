@@ -7,6 +7,7 @@ import json
 from django.core.mail import send_mail
 from django.conf import settings
 from PIL import Image
+from django.forms.models import model_to_dict
 
 # Create your views here.
 import random
@@ -29,6 +30,7 @@ def login(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
         if userform.is_valid():
+            response = HttpResponse()
             user = userform.cleaned_data['username']
             password = userform.cleaned_data['password']
 
@@ -36,9 +38,13 @@ def login(request):
             user2 = User.objects.filter(email__exact=user, password__exact=password)
 
             if user1:
-                return json.dumps(user1)
+                user1_dic = model_to_dict(user1)
+                response.set_cookie("username",user1_dic['username'])
+                return HttpResponse(json.dumps(user1))
             if user2:
-                return json.dumps(user2)
+                user2_dic = model_to_dict(user2)
+                response.set_cookie("username",user2_dic['username'])
+                return HttpResponse(json.dumps(user2))
             else:
                 return HttpResponse('用户名邮箱或密码错误,请重新登录')
         else:
