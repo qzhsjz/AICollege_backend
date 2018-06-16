@@ -1,7 +1,7 @@
 # Create your views here.
 from django.http import Http404,JsonResponse
 from .models import Course,Section
-from aicollege.user.models import User
+from user.models import User
 
 ##进入初始界面的时候，根据用户ID和推送算法，加载课程信息
 #根据需求返回课程信息
