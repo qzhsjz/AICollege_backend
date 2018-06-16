@@ -41,11 +41,11 @@ def login(request):
             if user1:
                 user1_dic = model_to_dict(user1)
                 response.set_cookie("username",user1_dic['username'])
-                return HttpResponse(json.dumps(user1))
+                return HttpResponse(json.dumps(user1_dic))
             if user2:
                 user2_dic = model_to_dict(user2)
                 response.set_cookie("username",user2_dic['username'])
-                return HttpResponse(json.dumps(user2))
+                return HttpResponse(json.dumps(user2_dic))
             else:
                 return HttpResponse('用户名邮箱或密码错误,请重新登录')
         else:
