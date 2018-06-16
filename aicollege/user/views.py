@@ -65,7 +65,7 @@ def regist(request):
             if user2:
                 return HttpResponse('邮箱已注册')
 
-            settings.COUNT=settings.COUNT+1   #f分配userID
+            # settings.COUNT=settings.COUNT+1   #f分配userID
             code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码
             code = ''.join(code)
             User.objects.create(username=username,password=password,email=email,emailVerified=False,emailCode=code,userId=settings.COUNT,referrer=refer)

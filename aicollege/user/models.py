@@ -5,7 +5,7 @@ from django.db import models
 
 class User(models.Model):
     #用户ID
-    user_id = models.AutoField()
+    # user_id = models.AutoField()
     #用户头像
     #picture = models.CharField(max_length=255)
     #upload_to 会在项目根目录下的media中创建userpic路径，这个文件夹用以保存所有用户头像
