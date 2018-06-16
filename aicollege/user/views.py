@@ -85,7 +85,6 @@ def regist(request):
             return HttpResponse('注册成功！')
     else:
         return HttpResponse("请求不合法")
-    return render_to_response('login.html',{'userform':userform})
 
 def email_verify(request):
     # try:
