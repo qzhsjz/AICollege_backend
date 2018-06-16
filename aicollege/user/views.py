@@ -82,6 +82,7 @@ def regist(request):
 
 def email_verify(request):
     # try:
+        print(request.GET)
         code = request.GET['code']
         username = request.GET['username']
         user = User.objects.filter(emailCode=code)
