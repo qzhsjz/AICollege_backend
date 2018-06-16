@@ -9,6 +9,7 @@ from django.conf import settings
 from PIL import Image
 
 # Create your views here.
+import random
 
 
 class UserForm(forms.Form):
@@ -65,16 +66,31 @@ def regist(request):
                 return HttpResponse('邮箱已注册')
 
             settings.COUNT=settings.COUNT+1   #f分配userID
-            User.objects.create(username=username,password=password,email=email,userId=settings.COUNT,referrer=refer)
+            code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码
+            code = ''.join(code)
+            User.objects.create(username=username,password=password,email=email,emailVerified=False,emailCode=code,userId=settings.COUNT,referrer=refer)
             User.save()
 
 
-            #send_mail('欢迎注册小智学堂！',)
+            mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code
+            send_mail(subject='注册确认',message=mailbody,from_email='aicollege.126.com',recipient_list=[email])
 
             return HttpResponse('注册成功！')
     else:
         userform = UserForm()
     return render_to_response('login.html',{'userform':userform})
+
+def email_verify(request):
+    try:
+        code = request.GET['code']
+        user = User.objects.filter(emailCode=code)
+        if user:
+            user.emailVerified = True
+        else:
+            return HttpResponse('验证失败')
+    except:
+        return HttpResponse('请求不合法')
+
 
 #检查username
 def check_username(request):
