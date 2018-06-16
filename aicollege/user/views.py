@@ -81,17 +81,18 @@ def regist(request):
     return render_to_response('login.html',{'userform':userform})
 
 def email_verify(request):
-    try:
+    # try:
         code = request.GET['code']
         username = request.GET['username']
         user = User.objects.filter(emailCode=code)
         if user:
             if user.username == username:
                 user.emailVerified = True
+                return HttpResponse('验证成功！')
         else:
             return HttpResponse('验证失败')
-    except:
-        return HttpResponse('请求不合法')
+    # except:
+    #     return HttpResponse('请求不合法')
 
 
 #检查username
