@@ -47,6 +47,8 @@ def login(request):
         else:
             userform = UserForm()
         return HttpResponse('不能为空')
+    else:
+        return HttpResponse("请求不合法")
 
 
 def regist(request):
@@ -77,7 +79,7 @@ def regist(request):
 
             return HttpResponse('注册成功！')
     else:
-        userform = UserForm()
+        return HttpResponse("请求不合法")
     return render_to_response('login.html',{'userform':userform})
 
 def email_verify(request):
@@ -103,7 +105,7 @@ def check_username(request):
             if user1:
                 return HttpResponse('用户名已存在')
     else:
-        return HttpResponse('用户名不能为空')
+        return HttpResponse('请求不合法')
 
 
 #检查注册邮箱
@@ -117,7 +119,7 @@ def check_email(request):
             if user2:
                 return HttpResponse('邮箱已注册')
     else:
-        return HttpResponse('邮箱不能为空')
+        return HttpResponse('请求不合法')
 
 
 #检查邀请人的userID信息
@@ -131,7 +133,9 @@ def check_id(request):
             if user:
                 return json.dumps(user)
             else:
-                return HttpResponse('没有此人')
+                return HttpResponse('查无此人')
+    else:
+        return HttpResponse('请求不合法')
 
 
 def input_pic(request):
@@ -148,3 +152,5 @@ def input_pic(request):
                 return HttpResponse('上传成功')
             else:
                 return HttpResponse('上传失败')
+    else:
+        return HttpResponse('请求不合法')
