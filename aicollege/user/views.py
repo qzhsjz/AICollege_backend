@@ -29,6 +29,7 @@ def index(request):
 def login(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
+        print(userform)
         if userform.is_valid():
             response = HttpResponse()
             user = userform.cleaned_data['username']
