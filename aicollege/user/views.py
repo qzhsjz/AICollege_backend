@@ -16,7 +16,7 @@ class UserForm(forms.Form):
      username = forms.CharField(label='用户名', max_length=50)
      password = forms.CharField(label='密码', widget=forms.PasswordInput())
      email = forms.EmailField(label='邮箱')
-     id = forms.IntegerField(label='邀请码', max_value=1000000000)   #邀请码
+     id = forms.IntegerField(label='邀请码', max_value=1000000000)   # 邀请码
      enctype = "multipart/form-data"   #头像
 
 
