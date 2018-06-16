@@ -131,6 +131,7 @@ COUNT = 0
 STATIC_URL = '/static/'
 
 # EMAIL SETTINGS
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.126.com'                   #SMTP地址
 EMAIL_PORT = 25                                 #SMTP端口
 EMAIL_HOST_USER = 'aicollege@126.com'       #我自己的邮箱
