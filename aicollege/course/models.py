@@ -5,7 +5,7 @@ from user.models import User,Student,Teacher
 
 #强实体集
 class Course(models.Model):
-    course_id = models.AutoField()
+    # course_id = models.AutoField()
     course_name = models.CharField(max_length=255)
     credit = models.IntegerField(default=4)          #默认4学分
     course_hours = models.IntegerField(default=48)   #默认48学时
