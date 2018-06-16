@@ -75,7 +75,7 @@ def regist(request):
             User.save()
 
 
-            mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code
+            mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
             send_mail(subject='注册确认',message=mailbody,from_email='aicollege.126.com',recipient_list=[email])
 
             return HttpResponse('注册成功！')
@@ -86,9 +86,11 @@ def regist(request):
 def email_verify(request):
     try:
         code = request.GET['code']
+        username = request.GET['username']
         user = User.objects.filter(emailCode=code)
         if user:
-            user.emailVerified = True
+            if user.username == username:
+                user.emailVerified = True
         else:
             return HttpResponse('验证失败')
     except:
