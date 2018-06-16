@@ -88,7 +88,8 @@ def email_verify(request):
         user = User.objects.filter(emailCode=code)
         if user:
             if user[0].username == username:
-                user.emailVerified = True
+                user[0].emailVerified = True
+                user.save()
                 return HttpResponse('验证成功！')
         else:
             return HttpResponse('验证失败')
