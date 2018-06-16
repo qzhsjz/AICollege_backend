@@ -21,7 +21,7 @@ class Course(models.Model):
 #弱实体集，课程的小节， 依赖cid
 class Section(models.Model):
     course = models.ForeignKey(Course,on_delete=models.CASCADE)    #强实体的cid
-    section_id = models.AutoField()
+    # section_id = models.AutoField()
     section_name = models.CharField(max_length = 255)
     section_info = models.TextField()          #小节对应的课程信息
     section_price = models.FloatField()        #当对应的课程的费用已付，无需支付小节费用
