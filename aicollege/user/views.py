@@ -76,7 +76,6 @@ def regist(request):
         userform = UserForm()
     return render_to_response('login.html',{'userform':userform})
 
-
 #检查username
 def check_username(request):
     if request.method == 'POST':
