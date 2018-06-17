@@ -51,11 +51,13 @@ def login(request):
             user1_dic = model_to_dict(user1)
             response = HttpResponse(json.dumps(user1_dic))
             response.set_cookie("username",user1_dic['username'])
+            print(response)
             return response
         elif user2:
             user2_dic = model_to_dict(user2)
             response = HttpResponse(json.dumps(user2_dic))
             response.set_cookie("username",user2_dic['username'])
+            print(response)
             return response
         else:
             return HttpResponse(json.dumps({'error': '用户名或密码错误！'}))
@@ -99,7 +101,6 @@ def regist(request):
 
         user1 = User.objects.filter(username__exact=username)
         user2 = User.objects.filter(email__exact=email)
-        user1.id
         if user1:
             return HttpResponse(json.dumps({'error': '用户名已存在！'}))
         if user2:
