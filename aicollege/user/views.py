@@ -103,7 +103,7 @@ def regist(request):
         # send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email],fail_silently=True)
         print(mailbody)
 
-        return HttpResponse(json.dumps({'error': '注册成功！'}))
+        return HttpResponse(json.dumps({'success': '注册成功！'}))
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
