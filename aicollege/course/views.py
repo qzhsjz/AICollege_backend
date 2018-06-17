@@ -8,12 +8,12 @@ from django.forms.models import model_to_dict
 #根据需求返回课程信息
 
 #搜索算法搜索课程
-def searchCourse(uid,index):
+def searchCourse(uid,page):
     if uid == -1:
         course = Course.objects.all()  #选取所有的课程
     else:
         user = User.objects.filter(id = uid)
-        course = Course.objects.filter(user__id = user.user_id).select_related()  #选取uid的所有课程
+        course = Course.objects.filter(user__id = user.id).select_related()  #选取uid的所有课程
 
     course1 = []
     obj_dic = {}
@@ -23,25 +23,24 @@ def searchCourse(uid,index):
         course1.append(model_to_dict(o))
     len1 = max(9, len(course1))
 
-    obj_dic['data'] = course1[(index-1)*9:min((index-1)*9+8,len1-1)]
+    obj_dic['data'] = course1[(page-1)*9:min((page-1)*9+8,len1-1)]
     return obj_dic
 
 #搜索小节
 def searchSection(uid,cid):
     user = User.objects.filter(id = uid)
-    course = Course.objects.filter(id=cid, user__id=user.user_id).select_related()  # 选取uid的所有课程
-    section = Section.objects.filter(course__id = course.course_id).select_related()
+    course = Course.objects.filter(id=cid, user__id=user.id).select_related()  # 选取uid的所有课程
+    section = Section.objects.filter(course__id = course.id).select_related()
 
     section1 = []
     obj_dic = {}
-    obj_dic['length'] = (len(section)-0.5)//9+1
+    obj_dic['length'] = len(section)
     for o in section:
         # 把Object对象转换成Dict
         section1.append(model_to_dict(o))
 
-    len1 = max(9,len(section1))
-    obj_dic['data'] = section1[0:len1-1]
-
+    #len1 = max(9,len(section1))
+    obj_dic['data'] = section1
     return obj_dic
 
     #for o in section:
@@ -92,11 +91,21 @@ def judgeCourse(request,cid):
     user = User.objects.filter(id= int(uid))
     course = Course.objects.filter(id=cid, user__id=user.user_id).select_related()  # 选取uid的所有课程
     dict = {}
+    dic = []
     if course:
         dict['islearn'] = True
     else:
         dict['islearn'] = False
     course = Course.objects.filter(id=cid)
-    dic = model_to_dict(course)
+    dic.append(model_to_dict(course))
     dict['course'] = dic
+
+    section = Section.objects.filter(course__id=course.id).select_related()
+    section1 = []
+    dict['length'] = len(section)
+    for o in section:
+        # 把Object对象转换成Dict
+        section1.append(model_to_dict(o))
+    dict['section'] = section1
+
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
