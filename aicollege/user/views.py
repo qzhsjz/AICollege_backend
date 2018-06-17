@@ -111,7 +111,7 @@ def regist(request):
         newuser.save()
 
 
-    mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
+        mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
         # send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email],fail_silently=True)
         print(mailbody)
 
