@@ -144,3 +144,4 @@ EMAIL_USE_TLS = False                 #与SMTP服务器通信时，是否启动T
 SERVER_EMAIL = 'xinxinyu2011@163.com'            #The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
 
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
