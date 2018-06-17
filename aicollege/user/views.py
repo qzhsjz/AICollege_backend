@@ -55,7 +55,7 @@ def login(request):
         elif user2:
             user2_dic = model_to_dict(user2[0])
             response = HttpResponse(json.dumps(user2_dic))
-            response.set_cookie("username",user2_dic['username'])
+            response.set_cookie("id",user2_dic['id'])
             return response
         else:
             return HttpResponse(json.dumps({'error': '用户名或密码错误！'}))
