@@ -21,7 +21,7 @@ def searchCourse(uid):
         dict = {}
         dict.update(o.__dict__)
         dict.pop("_state", None)  # 去除掉多余的字段
-        obj_dic[course.id] = dict
+        obj_dic[o.id] = dict
     return obj_dic
     #return model_to_dict(course)
     #columns = [col[0] for col in course.description]
@@ -41,7 +41,7 @@ def searchSection(uid,cid):
         dict = {}
         dict.update(o.__dict__)
         dict.pop("_state", None)  # 去除掉多余的字段
-        obj_dic[section.id] = dict
+        obj_dic[o.id] = dict
     return obj_dic
     #return model_to_dict(section)
     #columns = [col[0] for col in section.description]
