@@ -28,12 +28,24 @@ def index(request):
 
 def login(request):
     if request.method == 'POST':
-        userform = UserForm(request.POST)
+        #userform = UserForm(request.POST)
+        try:
+            nonlocal user
+            user = request.POST['username']
+            #password = request.POST['password']
+        except KeyError:
+            return  HttpResponse("用户名不能为空")
+        try:
+            nonlocal password
+            #user = request.POST['username']
+            password = request.POST['password']
+        except KeyError:
+            return  HttpResponse("密码不能为空")
+
         # print(userform)
-        if userform.is_valid():
             response = HttpResponse()
-            user = userform.cleaned_data['username']
-            password = userform.cleaned_data['password']
+            #user = userform.cleaned_data['username']
+            #password = userform.cleaned_data['password']
 
             user1 = User.objects.filter(username__exact=user, password__exact=password)
             user2 = User.objects.filter(email__exact=user, password__exact=password)
@@ -48,9 +60,6 @@ def login(request):
                 return HttpResponse(json.dumps(user2_dic))
             else:
                 return HttpResponse('用户名邮箱或密码错误,请重新登录')
-        else:
-            userform = UserForm()
-        return HttpResponse('不能为空')
     else:
         return HttpResponse("请求不合法")
 
@@ -58,11 +67,13 @@ def login(request):
 def regist(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
+        username = request.POST['username']
+        
         if userform.is_valid():
-            username = userform.cleaned_data['username']
-            password = userform.cleaned_data['password']
-            email = userform.cleaned_data['email']
-            refer = userform.cleaned_data['id']
+            #username = userform.cleaned_data['username']
+            #password = userform.cleaned_data['password']
+            #email = userform.cleaned_data['email']
+            #refer = userform.cleaned_data['id']
 
             user1 = User.objects.filter(username__exact=username)
             user2 = User.objects.filter(email__exact=email)
