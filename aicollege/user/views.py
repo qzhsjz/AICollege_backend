@@ -213,15 +213,18 @@ def changeinfo(request):
 
 #根据cookie返回数据
 def getdata(request):
-    if(request.method == 'GET'):
-        print(request.COOKIES)
-        uid = request.COOKIES['id']
-        user = User.objects.filter(userid__exact=uid)
-        if user:
-            user_dic = model_to_dict(user)
-            response = HttpResponse(json.dumps(user_dic))
-            return response
+    try:
+        if(request.method == 'GET'):
+            print(request.COOKIES)
+            uid = request.COOKIES['id']
+            user = User.objects.filter(userid__exact=uid)
+            if user:
+                user_dic = model_to_dict(user)
+                response = HttpResponse(json.dumps(user_dic))
+                return response
+            else:
+                return HttpResponse(json.dumps({'error': '无此用户！'}))
         else:
-            return HttpResponse(json.dumps({'error': '无此用户！'}))
-    else:
-        return HttpResponse(json.dumps({'error': '请求不合法！'}))
+            return HttpResponse(json.dumps({'error': '请求不合法！'}))
+    except:
+        return HttpResponse(json.dumps({'error': '请求不合法'}))
