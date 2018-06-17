@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from PIL import Image
 from django.forms.models import model_to_dict
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 # Create your views here.
 import random
@@ -76,16 +78,26 @@ def regist(request):
         try:
             #nonlocal email
             email = request.POST['email']
+            try:
+                validate_email(email)
+            except ValidationError:
+                return HttpResponse(json.dumps({'error':'邮箱格式不正确'}))
         except KeyError:
             return  HttpResponse(json.dumps({'error': '邮箱不能为空！'}))
         try:
             #nonlocal rfer
             refer = request.POST['refer_id']
+            user = User.objects.filter(userid__exact=refer)
+            if user:
+                pass
+            else:
+                return HttpResponse(json.dumps({'error': '查无此人！'}))
         except KeyError:
             pass
 
         user1 = User.objects.filter(username__exact=username)
         user2 = User.objects.filter(email__exact=email)
+        user1.id
         if user1:
             return HttpResponse(json.dumps({'error': '用户名已存在！'}))
         if user2:
@@ -117,9 +129,9 @@ def email_verify(request):
             if user[0].username == username:
                 user[0].emailVerified = True
                 user[0].save()
-                return HttpResponse('验证成功！')
+                return HttpResponse(json.dumps({'success': '验证成功！'}))
         else:
-            return HttpResponse('验证失败')
+            return HttpResponse(json.dumps({'error': '验证失败！'}))
     # except:
     #     return HttpResponse('请求不合法')
 
@@ -127,15 +139,16 @@ def email_verify(request):
 #检查username
 def check_username(request):
     if request.method == 'POST':
-        userform = UserForm(request.POST)
-        if userform.is_valid():
-            username = userform.cleaned_data['username']
+        try:
+            username = request.POST['username']
+        except KeyError:
+            return  HttpResponse(json.dumps({'error': '用户名不能为空！'}))
 
-            user1 = User.objects.filter(username__exact=username)
-            if user1:
-                return HttpResponse('用户名已存在')
+        user1 = User.objects.filter(username__exact=username)
+        if user1:
+            return HttpResponse(json.dumps({'error': '用户名已存在！'}))
     else:
-        return HttpResponse('请求不合法')
+        return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
 
 #检查注册邮箱
@@ -147,9 +160,9 @@ def check_email(request):
 
             user2 = User.objects.filter(email__exact=email)
             if user2:
-                return HttpResponse('邮箱已注册')
+                return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
     else:
-        return HttpResponse('请求不合法')
+        return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
 
 #检查邀请人的userID信息
@@ -163,9 +176,9 @@ def check_id(request):
             if user:
                 return json.dumps(user)
             else:
-                return HttpResponse('查无此人')
+                return HttpResponse(json.dumps({'error': '查无此人！'}))
     else:
-        return HttpResponse('请求不合法')
+        return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
 
 def input_pic(request):
