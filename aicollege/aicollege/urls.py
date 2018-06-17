@@ -21,5 +21,5 @@ urlpatterns = [
     path('course/', include('course.urls')),
     path('user/', include('user.urls')),
     path('forum/', include('forum.urls')),
-    path('/', include('index.urls'))
+    path('/', include('index.urls')),
 ]
