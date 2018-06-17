@@ -98,7 +98,7 @@ def judgeCourse(request,cid):
     else:
         dict['islearn'] = False
     course = Course.objects.filter(id=cid)
-    dic.append(model_to_dict(course))
+    dic.append(model_to_dict(course[0]))
     dict['course'] = dic
 
     section = Section.objects.filter(course__id=course.id).select_related()
