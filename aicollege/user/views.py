@@ -69,12 +69,13 @@ def regist(request):
             #nonlocal username
             username = request.POST['username']
         except KeyError:
-            return  HttpResponse(json.dumps({'error': '用户名不能为空！'}))
+            return HttpResponse(json.dumps({'error': '用户名不能为空！'}))
         try:
             #nonlocal password
             password = request.POST['password']
         except KeyError:
-            return  HttpResponse(json.dumps({'error': '密码不能为空！'}))
+            return HttpResponse(json.dumps({'error': '密码不能为空！'}))
+        print("开始Email验证")
         try:
             #nonlocal email
             email = request.POST['email']
@@ -83,7 +84,8 @@ def regist(request):
             except ValidationError:
                 return HttpResponse(json.dumps({'error':'邮箱格式不正确'}))
         except KeyError:
-            return  HttpResponse(json.dumps({'error': '邮箱不能为空！'}))
+            return HttpResponse(json.dumps({'error': '邮箱不能为空！'}))
+        print("结束邮件验证")
         try:
             #nonlocal rfer
             refer = request.POST['refer_id']
