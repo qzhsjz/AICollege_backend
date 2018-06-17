@@ -50,13 +50,13 @@ def login(request):
         if user1:
             user1_dic = model_to_dict(user1)
             response = HttpResponse(json.dumps(user1_dic))
-            response.set_cookie("username",user1_dic['username'])
+            response.set_cookie("useid",user1_dic['id'])
             print(response)
             return response
         elif user2:
             user2_dic = model_to_dict(user2)
             response = HttpResponse(json.dumps(user2_dic))
-            response.set_cookie("username",user2_dic['username'])
+            response.set_cookie("userid",user2_dic['userid'])
             print(response)
             return response
         else:
@@ -190,7 +190,7 @@ def check_id(request):
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
-
+#上传头像
 def input_pic(request):
     if(request.method == 'POST'):
         inputpic = request.FILES['input_pic']
@@ -207,3 +207,16 @@ def input_pic(request):
                 return HttpResponse('上传失败')
     else:
         return HttpResponse('请求不合法')
+
+
+#修改信息
+def changeinfo(request):
+    if(request.method == 'POST'):
+        try:
+            username = request.POST['username']
+        except KeyError:
+            return HttpResponse(json.dumps({'error': '没有此键！'}))
+        try:
+            userimg = request.POST['userimg']
+        except KeyError:
+            return HttpResponse(json.dumps({'error': '没有此键！'}))
