@@ -6,6 +6,7 @@ from user.models import User,Student,Teacher
 #强实体集
 class Course(models.Model):
     # course_id = models.AutoField()
+    id =models.AutoField(primary_key=True)
     course_name = models.CharField(max_length=255)
     credit = models.IntegerField(default=4)          #默认4学分
     course_hours = models.IntegerField(default=48)   #默认48学时
@@ -20,6 +21,7 @@ class Course(models.Model):
 
 #弱实体集，课程的小节， 依赖cid
 class Section(models.Model):
+    id = models.AutoField(primary_key=True)
     course = models.ForeignKey(Course,on_delete=models.CASCADE)    #强实体的cid
     # section_id = models.AutoField()
     section_name = models.CharField(max_length = 255)

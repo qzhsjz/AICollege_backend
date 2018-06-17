@@ -57,7 +57,6 @@ def getCourseInfo(request):
         raise Http404("课程加载失败")
     return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
 
-
 #返回用户购买课程列表，根据uid（所有课程的表）
 def getCourseInfoUid(request,user_id):
     try:

@@ -4,6 +4,7 @@ from django.db import models
 
 
 class User(models.Model):
+    id = models.AutoField(primary_key=True)
     #用户ID
     # user_id = models.AutoField()
     #用户头像
