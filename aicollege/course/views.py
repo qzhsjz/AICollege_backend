@@ -25,10 +25,10 @@ def searchCourse(uid):
     #obj_dic['length'] = len(course)
 
     obj_dic = {}
-    obj_dic['length'] = len(course) / 9
+    obj_dic['length'] = len(course)/ 9
 
-    len = max(9, len(course))
-    obj_dic['data'] = course[0:len - 1]
+    len1 = max(9, len(course))
+    obj_dic['data'] = course[0:len1 - 1]
 
     return obj_dic
     #return model_to_dict(course)
@@ -45,9 +45,9 @@ def searchSection(uid,cid):
 
     obj_dic = {}
     obj_dic['length'] = len(section)/9
-
-    len = max(9,len(section))
-    obj_dic['data'] = section[0:len-1]
+    
+    len1 = max(9,len(section))
+    obj_dic['data'] = section[0:len1-1]
 
     return obj_dic
 
