@@ -214,7 +214,7 @@ def changeinfo(request):
 #根据cookie返回数据
 def getdata(request):
     if(request.method == 'GET'):
-        uid = request.cookie['id']
+        uid = request.COOKIES['id']
         user = User.objects.filter(userid__exact=uid)
         if user:
             user_dic = model_to_dict(user)
