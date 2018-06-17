@@ -82,28 +82,28 @@ def regist(request):
             #nonlocal rfer
             refer = request.POST['refer_id']
         except KeyError:
-            #return  HttpResponse(json.dumps({'error': '用户名或密码错误！'}))
+            pass
 
-            user1 = User.objects.filter(username__exact=username)
-            user2 = User.objects.filter(email__exact=email)
-            if user1:
-                return HttpResponse(json.dumps({'error': '用户名已存在！'}))
-            if user2:
-                return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
+        user1 = User.objects.filter(username__exact=username)
+        user2 = User.objects.filter(email__exact=email)
+        if user1:
+            return HttpResponse(json.dumps({'error': '用户名已存在！'}))
+        if user2:
+            return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
 
-            # settings.COUNT=settings.COUNT+1   #f分配userID
-            # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
-            code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-') for i in range(0, 64)]
-            code = ''.join(code)
-            newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer)
-            newuser.save()
+        # settings.COUNT=settings.COUNT+1   #f分配userID
+        # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
+        code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-') for i in range(0, 64)]
+        code = ''.join(code)
+        newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer)
+        newuser.save()
 
 
-            mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
-            # send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email],fail_silently=True)
-            print(mailbody)
+        mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
+        # send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email],fail_silently=True)
+        print(mailbody)
 
-            return HttpResponse(json.dumps({'error': '注册成功！'}))
+        return HttpResponse(json.dumps({'error': '注册成功！'}))
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
