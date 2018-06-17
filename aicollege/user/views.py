@@ -48,12 +48,12 @@ def login(request):
         user1 = User.objects.filter(username__exact=user, password__exact=password)
         user2 = User.objects.filter(email__exact=user, password__exact=password)
         if user1:
-            user1_dic = model_to_dict(user1)
+            user1_dic = model_to_dict(user1[0])
             response = HttpResponse(json.dumps(user1_dic))
             response.set_cookie("id",user1_dic['id'])
             return response
         elif user2:
-            user2_dic = model_to_dict(user2)
+            user2_dic = model_to_dict(user2[0])
             response = HttpResponse(json.dumps(user2_dic))
             response.set_cookie("username",user2_dic['username'])
             return response
