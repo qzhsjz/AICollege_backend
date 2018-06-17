@@ -31,8 +31,8 @@ def login(request):
             user = request.POST['username']
             password = request.POST['password']
 
-            user1 = User.objects.filter(username__exact=user, password__exact=password)
-            user2 = User.objects.filter(email__exact=user, password__exact=password)
+            user1 = User.objects.filter(username__exact=user, password__exact=password)[0]
+            user2 = User.objects.filter(email__exact=user, password__exact=password)[0]
 
             if user1:
                 user1_dic = model_to_dict(user1)
