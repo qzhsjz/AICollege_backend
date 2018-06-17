@@ -210,3 +210,17 @@ def changeinfo(request):
             userimg = request.POST['userimg']
         except KeyError:
             return HttpResponse(json.dumps({'error': '没有此键！'}))
+
+#根据cookie返回数据
+def getdata(request):
+    if(request.method == 'GET'):
+        uid = request.cookie['id']
+        user = User.objects.filter(userid__exact=uid)
+        if user:
+            user_dic = model_to_dict(user)
+            response = HttpResponse(json.dumps(user_dic))
+            return response
+        else:
+            return HttpResponse(json.dumps({'error': '无此用户！'}))
+    else:
+        return HttpResponse(json.dumps({'error': '请求不合法！'}))
