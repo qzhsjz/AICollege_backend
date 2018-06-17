@@ -100,7 +100,9 @@ def regist(request):
                 pass
             else:
                 return HttpResponse(json.dumps({'error': '查无此人！'}))
-        except [KeyError, ValueError]:
+        except KeyError:
+            pass
+        except ValueError:
             pass
         print('完成介绍人认证')
 
