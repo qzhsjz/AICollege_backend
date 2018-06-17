@@ -87,7 +87,7 @@ def regist(request):
         try:
             #nonlocal rfer
             refer = request.POST['refer_id']
-            user = User.objects.filter(userid__exact=refer)
+            user = User.objects.filter(id__exact=refer)
             if user:
                 pass
             else:
