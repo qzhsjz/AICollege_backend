@@ -66,6 +66,7 @@ def login(request):
 
 
 def regist(request):
+    norefer = 0
     if request.method == 'POST':
         try:
             #nonlocal username
@@ -103,7 +104,7 @@ def regist(request):
         except KeyError:
             pass
         except ValueError:
-            pass
+            norefer = 1
         print('完成介绍人认证')
 
         user1 = User.objects.filter(username__exact=username)
@@ -119,7 +120,12 @@ def regist(request):
         # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
         code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-') for i in range(0, 64)]
         code = ''.join(code)
-        newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=int(refer))
+        if norefer:
+            newuser = User(username=username, password=password, email=email, emailVerified=False, emailCode=code, referrer=0)
+        else:
+            newuser = User(username=username, password=password, email=email, emailVerified=False, emailCode=code, referrer=int(refer))
+
+
         newuser.save()
 
 
