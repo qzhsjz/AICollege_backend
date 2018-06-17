@@ -2,6 +2,7 @@
 from django.http import Http404,JsonResponse
 from .models import Course,Section
 from user.models import User
+from django.forms.models import model_to_dict
 
 ##进入初始界面的时候，根据用户ID和推送算法，加载课程信息
 #根据需求返回课程信息
@@ -9,26 +10,44 @@ from user.models import User
 #搜索算法搜索课程
 def searchCourse(uid):
     if uid == -1:
-        course = Course.bbjects.all()  #选取所有的课程
+        course = Course.objects.all()  #选取所有的课程
     else:
-        user = User.objects.filter(user_id = uid)
-        course = Course.objects.filter(user_id = user.user_id).select_related()  #选取uid的所有课程
+        user = User.objects.filter(id = uid)
+        course = Course.objects.filter(user__id = user.user_id).select_related()  #选取uid的所有课程
 
-    columns = [col[0] for col in course.description]
-    return [
-        dict(zip(columns, row)) for row in course.fetchall()
-    ]
+    obj_dic = []
+    for o in course:
+        # 把Object对象转换成Dict
+        dict = {}
+        dict.update(o.__dict__)
+        dict.pop("_state", None)  # 去除掉多余的字段
+        obj_dic[course.id] = dict
+    return obj_dic
+    #return model_to_dict(course)
+    #columns = [col[0] for col in course.description]
+    #return [
+    #    dict(zip(columns, row)) for row in course.fetchall()
+    #]
 
 #搜索小节
 def searchSection(uid,cid):
-    user = User.objects.filter(user_id = uid)
-    course = Course.objects.filter(course_id=cid, user__user_id=user.user_id).select_related()  # 选取uid的所有课程
-    section = Section.objects.filter(course_id = course.course_id).select_related()
+    user = User.objects.filter(id = uid)
+    course = Course.objects.filter(id=cid, user__id=user.user_id).select_related()  # 选取uid的所有课程
+    section = Section.objects.filter(course__id = course.course_id).select_related()
 
-    columns = [col[0] for col in section.description]
-    return [
-        dict(zip(columns, row)) for row in section.fetchall()
-    ]
+    obj_dic = []
+    for o in course:
+        # 把Object对象转换成Dict
+        dict = {}
+        dict.update(o.__dict__)
+        dict.pop("_state", None)  # 去除掉多余的字段
+        obj_dic[section.id] = dict
+    return obj_dic
+    #return model_to_dict(section)
+    #columns = [col[0] for col in section.description]
+    #return [
+    #    dict(zip(columns, row)) for row in section.fetchall()
+    #]
 
 #返回初始界面课程的信息,类似index，加入界面时返回申请
 def getCourseInfo(request):
@@ -43,6 +62,7 @@ def getCourseInfo(request):
 def getCourseInfoUid(request,user_id):
     try:
         data = searchCourse(user_id)  #获取学生id对应的所有课程的所有信息
+
     except Course.DoesNotExist:  ##Course 表查找失败
         raise Http404("课程加载失败")
     return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
@@ -55,3 +75,16 @@ def getSectionInfoUCid(request,user_id,course_id):
     except Section.DoesNotExist:  ##Course 表查找失败
         raise Http404("课程小节加载失败")
     return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
+
+def judgeCourse(request,uid,cid):
+    user = User.objects.filter(id=uid)
+    course = Course.objects.filter(id=cid, user__id=user.user_id).select_related()  # 选取uid的所有课程
+    dict = {}
+    if course:
+        dict['islearn'] = True
+    else:
+        dict['islearn'] = False
+    course = Course.objects.filter(id=cid)
+    dic = model_to_dict(course)
+    dict['course'] = dic
+    return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
