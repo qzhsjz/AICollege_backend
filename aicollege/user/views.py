@@ -25,15 +25,14 @@ def index(request):
 
 def login(request):
     if request.method == 'POST':
-        userform = UserForm(request.POST)
         # print(userform)
-        if userform.is_valid():
+        try:
             response = HttpResponse()
-            user = userform.cleaned_data['username']
-            password = userform.cleaned_data['password']
+            user = request.POST['username']
+            password = request.POST['password']
 
-            user1 = User.objects.filter(username__exact=user, password__exact=password)
-            user2 = User.objects.filter(email__exact=user, password__exact=password)
+            user1 = User.objects.filter(username__exact=user, password__exact=password)[0]
+            user2 = User.objects.filter(email__exact=user, password__exact=password)[0]
 
             if user1:
                 user1_dic = model_to_dict(user1)
@@ -45,9 +44,9 @@ def login(request):
                 return HttpResponse(json.dumps(user2_dic))
             else:
                 return HttpResponse('用户名邮箱或密码错误,请重新登录')
-        else:
-            userform = UserForm()
-        return HttpResponse('不能为空')
+        except KeyError:
+            return HttpResponse('不能为空')
+
     else:
         return HttpResponse("请求不合法")
 
