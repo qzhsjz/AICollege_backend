@@ -8,26 +8,23 @@ from django.forms.models import model_to_dict
 #根据需求返回课程信息
 
 #搜索算法搜索课程
-def searchCourse(uid):
+def searchCourse(uid,index):
     if uid == -1:
         course = Course.objects.all()  #选取所有的课程
     else:
         user = User.objects.filter(id = uid)
         course = Course.objects.filter(user__id = user.user_id).select_related()  #选取uid的所有课程
 
-    obj_dic = []
+    course1 = []
+    obj_dic = {}
+    obj_dic['length'] = (len(course)-0.5)// 9+1
     for o in course:
         # 把Object对象转换成Dict
-        dict = {}
-        dict.update(o.__dict__)
-        dict.pop("_state", None)  # 去除掉多余的字段
-        obj_dic[o.id] = dict
+        course1.append(model_to_dict(o))
+    len1 = max(9, len(course1))
+
+    obj_dic['data'] = course1[(index-1)*9:min((index-1)*9+8,len1-1)]
     return obj_dic
-    #return model_to_dict(course)
-    #columns = [col[0] for col in course.description]
-    #return [
-    #    dict(zip(columns, row)) for row in course.fetchall()
-    #]
 
 #搜索小节
 def searchSection(uid,cid):
@@ -35,14 +32,27 @@ def searchSection(uid,cid):
     course = Course.objects.filter(id=cid, user__id=user.user_id).select_related()  # 选取uid的所有课程
     section = Section.objects.filter(course__id = course.course_id).select_related()
 
-    obj_dic = []
-    for o in course:
+    section1 = []
+    obj_dic = {}
+    obj_dic['length'] = (len(section)-0.5)//9+1
+    for o in section:
         # 把Object对象转换成Dict
-        dict = {}
-        dict.update(o.__dict__)
-        dict.pop("_state", None)  # 去除掉多余的字段
-        obj_dic[o.id] = dict
+        section1.append(model_to_dict(o))
+
+    len1 = max(9,len(section1))
+    obj_dic['data'] = section1[0:len1-1]
+
     return obj_dic
+
+    #for o in section:
+        # 把Object对象转换成Dict
+        #dict = {}
+        #dict.update(o.__dict__)
+        #dict.pop("_state", None)  # 去除掉多余的字段
+        #obj_dic[o.id] = dict
+        #obj_dic
+
+    #return obj_dic
     #return model_to_dict(section)
     #columns = [col[0] for col in section.description]
     #return [
@@ -50,9 +60,9 @@ def searchSection(uid,cid):
     #]
 
 #返回初始界面课程的信息,类似index，加入界面时返回申请
-def getCourseInfo(request):
+def getCourseInfo(request,index):
     try:
-        data = searchCourse(-1)  #-1用于表示非用户id，将所有课程推送回来
+        data = searchCourse(-1,int(index))  #-1用于表示非用户id，将所有课程推送回来
     except Course.DoesNotExist:  ##Course 表查找失败
         raise Http404("课程加载失败")
     return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})

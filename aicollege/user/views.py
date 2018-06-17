@@ -30,17 +30,10 @@ def index(request):
 
 def login(request):
     if request.method == 'POST':
-        #userform = UserForm(request.POST)
+        # print(userform)
         try:
-            #nonlocal user
+            response = HttpResponse()
             user = request.POST['username']
-            #password = request.POST['password']
-        except KeyError:
-            return  HttpResponse("用户名不能为空")
-
-        try:
-            #nonlocal password
-            #user = request.POST['username']
             password = request.POST['password']
         except KeyError:
             return  HttpResponse("密码不能为空")
@@ -125,7 +118,7 @@ def regist(request):
         # send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email],fail_silently=True)
         print(mailbody)
 
-        return HttpResponse(json.dumps({'success': '注册成功！'}))
+            return HttpResponse('注册成功！')
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
