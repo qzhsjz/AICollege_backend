@@ -60,9 +60,9 @@ def login(request):
             return response
         else:
             print('else\n')
-            return HttpResponse('用户名邮箱或密码错误,请重新登录')
+            return HttpResponse(json.dumps({'error': '用户名或密码错误！'}))
     else:
-        return HttpResponse("请求不合法")
+        return HttpResponse(json.dumps({"error": "请求不合法！"}))
 
 
 def regist(request):
