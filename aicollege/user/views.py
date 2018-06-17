@@ -67,27 +67,23 @@ def login(request):
 def regist(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
-        username=''
-        password=''
-        email=''
-        refer=''
         try:
-            nonlocal username
+            #nonlocal username
             username = request.POST['username']
         except KeyError:
             return  HttpResponse("用户名不能为空")
         try:
-            nonlocal password
+            #nonlocal password
             password = request.POST['password']
         except KeyError:
             return  HttpResponse("密码不能为空")
         try:
-            nonlocal email
+            #nonlocal email
             email = request.POST['email']
         except KeyError:
             return  HttpResponse("邮箱不能为空")
         try:
-            nonlocal rfer
+            #nonlocal rfer
             refer = request.POST['refer_id']
         except KeyError:
             return  HttpResponse("邮箱不能为空")
