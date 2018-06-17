@@ -22,7 +22,8 @@ def searchCourse(uid,index):
         # 把Object对象转换成Dict
         course1.append(model_to_dict(o))
     len1 = max(9, len(course1))
-    obj_dic['data'] = course1[(index-1)*9:(index-1)*9+8]
+
+    obj_dic['data'] = course1[(index-1)*9:min((index-1)*9+8,len1-1)]
     return obj_dic
 
 #搜索小节
