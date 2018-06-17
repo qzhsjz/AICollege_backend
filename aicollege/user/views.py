@@ -92,6 +92,8 @@ def regist(request):
             #nonlocal rfer
             refer = request.POST['refer_id']
             refer = int(refer)
+            print(refer)
+            print(type(refer))
             user = User.objects.filter(id__exact=refer)
             if user:
                 pass
