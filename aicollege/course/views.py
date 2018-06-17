@@ -15,7 +15,7 @@ def searchCourse(uid):
         user = User.objects.filter(id = uid)
         course = Course.objects.filter(user__id = user.user_id).select_related()  #选取uid的所有课程
 
-    course1 = course.toList()
+    course1 = list(course)
     #obj_dic = {}
     #for o in course:
         # 把Object对象转换成Dict
@@ -44,7 +44,7 @@ def searchSection(uid,cid):
     course = Course.objects.filter(id=cid, user__id=user.user_id).select_related()  # 选取uid的所有课程
     section = Section.objects.filter(course__id = course.course_id).select_related()
 
-    section1 = section.toList()
+    section1 = list(section)
     obj_dic = {}
     obj_dic['length'] = len(section1)/9
 
