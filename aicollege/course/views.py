@@ -87,7 +87,8 @@ def getSectionInfoUCid(request,course_id):
     return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
 
 def judgeCourse(request,cid):
-    uid = request.COOKIES['id']
+    #uid = request.COOKIES['id']
+    uid=10
     user = User.objects.filter(id= int(uid))
     course = Course.objects.filter(id=cid, user__id=user.user_id).select_related()  # 选取uid的所有课程
     dict = {}
