@@ -50,12 +50,12 @@ def login(request):
         if user1:
             user1_dic = model_to_dict(user1[0])
             response = HttpResponse(json.dumps(user1_dic))
-            response.set_cookie("id",user1_dic['id'])
+            response.set_cookie("id", user1_dic['id'])
             return response
         elif user2:
             user2_dic = model_to_dict(user2[0])
             response = HttpResponse(json.dumps(user2_dic))
-            response.set_cookie("username",user2_dic['username'])
+            response.set_cookie("id", user2_dic['id'])
             return response
         else:
             return HttpResponse(json.dumps({'error': '用户名或密码错误！'}))
@@ -214,7 +214,8 @@ def changeinfo(request):
 #根据cookie返回数据
 def getdata(request):
     if(request.method == 'GET'):
-        uid = request.cookie['id']
+        print(request.COOKIES)
+        uid = request.COOKIES['id']
         user = User.objects.filter(userid__exact=uid)
         if user:
             user_dic = model_to_dict(user)
