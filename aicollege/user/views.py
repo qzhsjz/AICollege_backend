@@ -101,7 +101,6 @@ def regist(request):
 
         user1 = User.objects.filter(username__exact=username)
         user2 = User.objects.filter(email__exact=email)
-        user1.id
         if user1:
             return HttpResponse(json.dumps({'error': '用户名已存在！'}))
         if user2:
