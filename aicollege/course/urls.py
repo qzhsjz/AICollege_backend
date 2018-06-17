@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     #ex: /course/
-    path('all/<int:index>',views.getCourseInfo),
+    path('all/<int:page>',views.getCourseInfo),
     #ex: /course/user_id/
     path('', views.getCourseInfoUid),
     path('<int:cid>',views.judgeCourse),
