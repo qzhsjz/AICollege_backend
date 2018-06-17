@@ -17,7 +17,7 @@ def searchCourse(uid):
 
     course1 = []
     obj_dic = {}
-    obj_dic['length'] = len(course)/ 9
+    obj_dic['length'] = (len(course)-0.5)// 9+1
     for o in course:
         # 把Object对象转换成Dict
         course1.append(model_to_dict(o))
@@ -35,7 +35,7 @@ def searchSection(uid,cid):
 
     section1 = []
     obj_dic = {}
-    obj_dic['length'] = len(section)/9
+    obj_dic['length'] = (len(section)-0.5)//9+1
     for o in section:
         # 把Object对象转换成Dict
         section1.append(model_to_dict(o))
