@@ -29,16 +29,14 @@ def index(request):
 def login(request):
     if request.method == 'POST':
         #userform = UserForm(request.POST)
-        user=''
-        password=''
         try:
-            nonlocal user
+            #nonlocal user
             user = request.POST['username']
             #password = request.POST['password']
         except KeyError:
             return  HttpResponse("用户名不能为空")
         try:
-            nonlocal password
+            #nonlocal password
             #user = request.POST['username']
             password = request.POST['password']
         except KeyError:
@@ -69,6 +67,10 @@ def login(request):
 def regist(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
+        username=''
+        password=''
+        email=''
+        refer=''
         try:
             nonlocal username
             username = request.POST['username']
@@ -90,7 +92,6 @@ def regist(request):
         except KeyError:
             return  HttpResponse("邮箱不能为空")
 
-        if userform.is_valid():
             #username = userform.cleaned_data['username']
             #password = userform.cleaned_data['password']
             #email = userform.cleaned_data['email']
