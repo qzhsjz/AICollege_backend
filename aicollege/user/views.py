@@ -30,10 +30,17 @@ def index(request):
 
 def login(request):
     if request.method == 'POST':
-        # print(userform)
+        #userform = UserForm(request.POST)
         try:
-            response = HttpResponse()
+            #nonlocal user
             user = request.POST['username']
+            #password = request.POST['password']
+        except KeyError:
+            return  HttpResponse("用户名不能为空")
+
+        try:
+            #nonlocal password
+            #user = request.POST['username']
             password = request.POST['password']
         except KeyError:
             return  HttpResponse("密码不能为空")
@@ -43,14 +50,12 @@ def login(request):
         if user1:
             user1_dic = model_to_dict(user1)
             response = HttpResponse(json.dumps(user1_dic))
-            response.set_cookie("useid",user1_dic['id'])
-            print(response)
+            response.set_cookie("id",user1_dic['id'])
             return response
         elif user2:
             user2_dic = model_to_dict(user2)
             response = HttpResponse(json.dumps(user2_dic))
-            response.set_cookie("userid",user2_dic['userid'])
-            print(response)
+            response.set_cookie("username",user2_dic['username'])
             return response
         else:
             return HttpResponse(json.dumps({'error': '用户名或密码错误！'}))
@@ -64,13 +69,12 @@ def regist(request):
             #nonlocal username
             username = request.POST['username']
         except KeyError:
-            return HttpResponse(json.dumps({'error': '用户名不能为空！'}))
+            return  HttpResponse(json.dumps({'error': '用户名不能为空！'}))
         try:
             #nonlocal password
             password = request.POST['password']
         except KeyError:
-            return HttpResponse(json.dumps({'error': '密码不能为空！'}))
-        print("开始Email验证")
+            return  HttpResponse(json.dumps({'error': '密码不能为空！'}))
         try:
             #nonlocal email
             email = request.POST['email']
@@ -79,15 +83,10 @@ def regist(request):
             except ValidationError:
                 return HttpResponse(json.dumps({'error':'邮箱格式不正确'}))
         except KeyError:
-            return HttpResponse(json.dumps({'error': '邮箱不能为空！'}))
-        print("结束邮件验证 开始介绍人认证")
+            return  HttpResponse(json.dumps({'error': '邮箱不能为空！'}))
         try:
             #nonlocal rfer
             refer = request.POST['refer_id']
-
-            print(refer)
-            print(type(refer))
-            refer = int(refer)
             user = User.objects.filter(id__exact=refer)
             if user:
                 pass
@@ -95,30 +94,28 @@ def regist(request):
                 return HttpResponse(json.dumps({'error': '查无此人！'}))
         except KeyError:
             pass
-        print('完成介绍人认证')
 
         user1 = User.objects.filter(username__exact=username)
         user2 = User.objects.filter(email__exact=email)
+        user1.id
         if user1:
-            print('user1')
             return HttpResponse(json.dumps({'error': '用户名已存在！'}))
         if user2:
-            print('user2')
             return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
 
         # settings.COUNT=settings.COUNT+1   #f分配userID
         # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
         code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-') for i in range(0, 64)]
         code = ''.join(code)
-        newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=int(refer))
+        newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer)
         newuser.save()
 
 
-        mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
+    mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
         # send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email],fail_silently=True)
         print(mailbody)
 
-            return HttpResponse('注册成功！')
+        return HttpResponse(json.dumps({'success': '注册成功！'}))
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
