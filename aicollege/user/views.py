@@ -52,13 +52,16 @@ def login(request):
 
             if user1:
                 user1_dic = model_to_dict(user1)
+                print('user1\n')
                 response.set_cookie("username",user1_dic['username'])
                 return HttpResponse(json.dumps(user1_dic))
-            if user2:
+            elif user2:
                 user2_dic = model_to_dict(user2)
+                printf('user2\n')
                 response.set_cookie("username",user2_dic['username'])
                 return HttpResponse(json.dumps(user2_dic))
             else:
+                print('else\n')
                 return HttpResponse('用户名邮箱或密码错误,请重新登录')
     else:
         return HttpResponse("请求不合法")
@@ -66,7 +69,6 @@ def login(request):
 
 def regist(request):
     if request.method == 'POST':
-        userform = UserForm(request.POST)
         try:
             #nonlocal username
             username = request.POST['username']
@@ -87,11 +89,6 @@ def regist(request):
             refer = request.POST['refer_id']
         except KeyError:
             return  HttpResponse("邮箱不能为空")
-
-            #username = userform.cleaned_data['username']
-            #password = userform.cleaned_data['password']
-            #email = userform.cleaned_data['email']
-            #refer = userform.cleaned_data['id']
 
             user1 = User.objects.filter(username__exact=username)
             user2 = User.objects.filter(email__exact=email)
