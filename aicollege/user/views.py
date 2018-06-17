@@ -28,7 +28,7 @@ def index(request):
 
 def login(request):
     if request.method == 'POST':
-        print(1)
+        print('1')
         #userform = UserForm(request.POST)
         try:
             #nonlocal user
@@ -36,24 +36,16 @@ def login(request):
             #password = request.POST['password']
         except KeyError:
             return  HttpResponse("用户名不能为空")
-        print(2)
+        print('2')
         try:
             #nonlocal password
             #user = request.POST['username']
             password = request.POST['password']
         except KeyError:
             return  HttpResponse("密码不能为空")
-
-        print(3)
-
-        # print(userform)
-        #     response = HttpResponse()
-            #user = userform.cleaned_data['username']
-            #password = userform.cleaned_data['password']
-
+        print('3')
         user1 = User.objects.filter(username__exact=user, password__exact=password)
         user2 = User.objects.filter(email__exact=user, password__exact=password)
-
         if user1:
             user1_dic = model_to_dict(user1)
             print('user1\n')
