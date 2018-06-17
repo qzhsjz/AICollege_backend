@@ -5,7 +5,6 @@ from user.models import User,Student,Teacher
 
 #强实体集
 class Course(models.Model):
-    # course_id = models.AutoField()
     id =models.AutoField(primary_key=True)
     course_name = models.CharField(max_length=255)
     credit = models.IntegerField(default=4)          #默认4学分
@@ -24,7 +23,6 @@ class Course(models.Model):
 class Section(models.Model):
     id = models.AutoField(primary_key=True)
     course = models.ForeignKey(Course,on_delete=models.CASCADE)    #强实体的cid
-    # section_id = models.AutoField()
     section_name = models.CharField(max_length = 255)
     section_info = models.TextField()          #小节对应的课程信息
     section_data = models.DateTimeField('date published')
