@@ -8,7 +8,7 @@ from django.forms.models import model_to_dict
 #根据需求返回课程信息
 
 #搜索算法搜索课程
-def searchCourse(uid):
+def searchCourse(uid,index):
     if uid == -1:
         course = Course.objects.all()  #选取所有的课程
     else:
@@ -21,10 +21,8 @@ def searchCourse(uid):
     for o in course:
         # 把Object对象转换成Dict
         course1.append(model_to_dict(o))
-
     len1 = max(9, len(course1))
-    obj_dic['data'] = course1[0:len1 - 1]
-
+    obj_dic['data'] = course1[(index-1)*9:(index-1)*9+8]
     return obj_dic
 
 #搜索小节
@@ -61,9 +59,9 @@ def searchSection(uid,cid):
     #]
 
 #返回初始界面课程的信息,类似index，加入界面时返回申请
-def getCourseInfo(request):
+def getCourseInfo(request,index):
     try:
-        data = searchCourse(-1)  #-1用于表示非用户id，将所有课程推送回来
+        data = searchCourse(-1,int(index))  #-1用于表示非用户id，将所有课程推送回来
     except Course.DoesNotExist:  ##Course 表查找失败
         raise Http404("课程加载失败")
     return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
