@@ -14,6 +14,8 @@ from django.core.exceptions import ValidationError
 # Create your views here.
 import random
 
+import zmail
+mailserver = zmail.server('aicollege@126.com', 'aicollege123')
 
 class UserForm(forms.Form):
      username = forms.CharField(label='用户名', max_length=50)
@@ -131,6 +133,11 @@ def regist(request):
 
         mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
         # send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email],fail_silently=True)
+        mail = {
+            'subject': '[小智学院]注册确认',  # Anything you want.
+            'content': mailbody,  # Anything you want.
+        }
+        mailserver.send_mail(email, mail)
         print(mailbody)
 
         return HttpResponse(json.dumps({'success': '注册成功！'}))
