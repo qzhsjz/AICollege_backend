@@ -28,7 +28,6 @@ def index(request):
 
 def login(request):
     if request.method == 'POST':
-        print('1')
         #userform = UserForm(request.POST)
         try:
             #nonlocal user
@@ -36,30 +35,27 @@ def login(request):
             #password = request.POST['password']
         except KeyError:
             return  HttpResponse("用户名不能为空")
-        print('2')
+
         try:
             #nonlocal password
             #user = request.POST['username']
             password = request.POST['password']
         except KeyError:
             return  HttpResponse("密码不能为空")
-        print('3')
+
         user1 = User.objects.filter(username__exact=user, password__exact=password)
         user2 = User.objects.filter(email__exact=user, password__exact=password)
         if user1:
             user1_dic = model_to_dict(user1)
-            print('user1\n')
             response = HttpResponse(json.dumps(user1_dic))
             response.set_cookie("username",user1_dic['username'])
             return response
         elif user2:
             user2_dic = model_to_dict(user2)
-            printf('user2\n')
             response = HttpResponse(json.dumps(user2_dic))
             response.set_cookie("username",user2_dic['username'])
             return response
         else:
-            print('else\n')
             return HttpResponse(json.dumps({'error': '用户名或密码错误！'}))
     else:
         return HttpResponse(json.dumps({"error": "请求不合法！"}))
