@@ -14,7 +14,7 @@ class Course(models.Model):
     course_price = models.IntegerField()                      #费用,一整套课的费用
     course_data = models.DateTimeField('date published')    #课程发布时间
     user = models.ManyToManyField(User)
-    teacherName = models.CharField(max_length=255)                    #讲课老师
+    teacherName = models.CharField(max_length=255,default='')                    #讲课老师
     #teacher = models.ForeignKey(Teacher,on_delete=models.CASCADE)    #老师与课程的关系为1对多
     #students = models.ManyToManyField(Student)                       #学生与课程的关系是多对多
     #pic = models.ImageField(upload_to='')                            #这一块是图片上传过来后储存到数据库中
