@@ -91,16 +91,16 @@ def regist(request):
         try:
             #nonlocal rfer
             refer = request.POST['refer_id']
-
-            print(refer)
-            print(type(refer))
-            refer = int(refer)
+            try:
+                refer = int(refer)
+            except ValueError:
+                raise ValueError
             user = User.objects.filter(id__exact=refer)
             if user:
                 pass
             else:
                 return HttpResponse(json.dumps({'error': '查无此人！'}))
-        except KeyError:
+        except [KeyError, ValueError]:
             pass
         print('完成介绍人认证')
 
