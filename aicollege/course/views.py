@@ -22,6 +22,7 @@ def searchCourse(uid):
         dict.update(o.__dict__)
         dict.pop("_state", None)  # 去除掉多余的字段
         obj_dic[o.id] = dict
+    obj_dic['length'] = len(course)
     return obj_dic
     #return model_to_dict(course)
     #columns = [col[0] for col in course.description]
@@ -34,14 +35,14 @@ def searchSection(uid,cid):
     user = User.objects.filter(id = uid)
     course = Course.objects.filter(id=cid, user__id=user.user_id).select_related()  # 选取uid的所有课程
     section = Section.objects.filter(course__id = course.course_id).select_related()
-
     obj_dic = {}
-    for o in course:
+    for o in section:
         # 把Object对象转换成Dict
         dict = {}
         dict.update(o.__dict__)
         dict.pop("_state", None)  # 去除掉多余的字段
         obj_dic[o.id] = dict
+    obj_dic['length'] = len(section)
     return obj_dic
     #return model_to_dict(section)
     #columns = [col[0] for col in section.description]
