@@ -51,24 +51,24 @@ def login(request):
             #user = userform.cleaned_data['username']
             #password = userform.cleaned_data['password']
 
-            user1 = User.objects.filter(username__exact=user, password__exact=password)
-            user2 = User.objects.filter(email__exact=user, password__exact=password)
+        user1 = User.objects.filter(username__exact=user, password__exact=password)
+        user2 = User.objects.filter(email__exact=user, password__exact=password)
 
-            if user1:
-                user1_dic = model_to_dict(user1)
-                print('user1\n')
-                response = HttpResponse(json.dumps(user1_dic))
-                response.set_cookie("username",user1_dic['username'])
-                return response
-            elif user2:
-                user2_dic = model_to_dict(user2)
-                printf('user2\n')
-                response = HttpResponse(json.dumps(user2_dic))
-                response.set_cookie("username",user2_dic['username'])
-                return response
-            else:
-                print('else\n')
-                return HttpResponse('用户名邮箱或密码错误,请重新登录')
+        if user1:
+            user1_dic = model_to_dict(user1)
+            print('user1\n')
+            response = HttpResponse(json.dumps(user1_dic))
+            response.set_cookie("username",user1_dic['username'])
+            return response
+        elif user2:
+            user2_dic = model_to_dict(user2)
+            printf('user2\n')
+            response = HttpResponse(json.dumps(user2_dic))
+            response.set_cookie("username",user2_dic['username'])
+            return response
+        else:
+            print('else\n')
+            return HttpResponse('用户名邮箱或密码错误,请重新登录')
     else:
         return HttpResponse("请求不合法")
 
