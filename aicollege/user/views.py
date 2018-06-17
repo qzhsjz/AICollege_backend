@@ -43,7 +43,7 @@ def login(request):
             return  HttpResponse("密码不能为空")
 
         # print(userform)
-            response = HttpResponse()
+            #response = HttpResponse()
             #user = userform.cleaned_data['username']
             #password = userform.cleaned_data['password']
 
