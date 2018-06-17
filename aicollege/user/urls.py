@@ -10,5 +10,6 @@ urlpatterns = [
     path('chkemail', views.check_email),
     path('chkusername', views.check_username),
     path('chkid', views.check_id),
-    path('picupload', views.input_pic)
+    path('picupload', views.input_pic),
+    path('getuserinfo', views.getdata)
 ]
