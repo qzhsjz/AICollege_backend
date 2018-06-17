@@ -33,7 +33,7 @@ def login(request):
         #userform = UserForm(request.POST)
         try:
             #nonlocal user
-            user = request.POST['username']im
+            user = request.POST['username']
             #password = request.POST['password']
         except KeyError:
             return  HttpResponse("用户名不能为空")
