@@ -67,29 +67,29 @@ def regist(request):
             #nonlocal username
             username = request.POST['username']
         except KeyError:
-            return  HttpResponse("用户名不能为空")
+            return  HttpResponse(json.dumps({'error': '用户名不能为空！'}))
         try:
             #nonlocal password
             password = request.POST['password']
         except KeyError:
-            return  HttpResponse("密码不能为空")
+            return  HttpResponse(json.dumps({'error': '密码不能为空！'}))
         try:
             #nonlocal email
             email = request.POST['email']
         except KeyError:
-            return  HttpResponse("邮箱不能为空")
+            return  HttpResponse(json.dumps({'error': '邮箱不能为空！'}))
         try:
             #nonlocal rfer
             refer = request.POST['refer_id']
         except KeyError:
-            return  HttpResponse("邮箱不能为空")
+            #return  HttpResponse(json.dumps({'error': '用户名或密码错误！'}))
 
             user1 = User.objects.filter(username__exact=username)
             user2 = User.objects.filter(email__exact=email)
             if user1:
-                return HttpResponse('用户名已存在')
+                return HttpResponse(json.dumps({'error': '用户名已存在！'}))
             if user2:
-                return HttpResponse('邮箱已注册')
+                return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
 
             # settings.COUNT=settings.COUNT+1   #f分配userID
             # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
@@ -103,9 +103,9 @@ def regist(request):
             # send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email],fail_silently=True)
             print(mailbody)
 
-            return HttpResponse('注册成功！')
+            return HttpResponse(json.dumps({'error': '注册成功！'}))
     else:
-        return HttpResponse("请求不合法")
+        return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
 def email_verify(request):
     # try:
