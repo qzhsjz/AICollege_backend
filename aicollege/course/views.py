@@ -20,10 +20,7 @@ def searchCourse(uid):
     obj_dic['length'] = len(course)/ 9
     for o in course:
         # 把Object对象转换成Dict
-        dict = {}
-        dict.update(o.__dict__)
-        dict.pop("_state", None)  # 去除掉多余的字段
-        course1.append(o)
+        course1.append(model_to_dict(o))
 
     len1 = max(9, len(course1))
     obj_dic['data'] = course1[0:len1 - 1]
@@ -39,19 +36,29 @@ def searchSection(uid,cid):
     section1 = []
     obj_dic = {}
     obj_dic['length'] = len(section)/9
-
-    for o in course:
+    for o in section:
         # 把Object对象转换成Dict
-        dict = {}
-        dict.update(o.__dict__)
-        dict.pop("_state", None)  # 去除掉多余的字段
-        section1.append(o)
-    
+        section1.append(model_to_dict(o))
+
     len1 = max(9,len(section1))
     obj_dic['data'] = section1[0:len1-1]
 
     return obj_dic
 
+    #for o in section:
+        # 把Object对象转换成Dict
+        #dict = {}
+        #dict.update(o.__dict__)
+        #dict.pop("_state", None)  # 去除掉多余的字段
+        #obj_dic[o.id] = dict
+        #obj_dic
+
+    #return obj_dic
+    #return model_to_dict(section)
+    #columns = [col[0] for col in section.description]
+    #return [
+    #    dict(zip(columns, row)) for row in section.fetchall()
+    #]
 
 #返回初始界面课程的信息,类似index，加入界面时返回申请
 def getCourseInfo(request):
