@@ -87,10 +87,11 @@ def regist(request):
                 return HttpResponse(json.dumps({'error':'邮箱格式不正确'}))
         except KeyError:
             return HttpResponse(json.dumps({'error': '邮箱不能为空！'}))
-        print("结束邮件验证")
+        print("结束邮件验证 开始介绍人认证")
         try:
             #nonlocal rfer
             refer = request.POST['refer_id']
+            refer = int(refer)
             user = User.objects.filter(id__exact=refer)
             if user:
                 pass
@@ -98,19 +99,22 @@ def regist(request):
                 return HttpResponse(json.dumps({'error': '查无此人！'}))
         except KeyError:
             pass
+        print('完成介绍人认证')
 
         user1 = User.objects.filter(username__exact=username)
         user2 = User.objects.filter(email__exact=email)
         if user1:
+            print('user1')
             return HttpResponse(json.dumps({'error': '用户名已存在！'}))
         if user2:
+            print('user2')
             return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
 
         # settings.COUNT=settings.COUNT+1   #f分配userID
         # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
         code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-') for i in range(0, 64)]
         code = ''.join(code)
-        newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer)
+        newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=int(refer))
         newuser.save()
 
 
