@@ -141,6 +141,7 @@ EMAIL_HOST_PASSWORD = 'aicollege123'
 EMAIL_SUBJECT_PREFIX = u'[小智学院]'
 # EMAIL_USE_TLS = True
 EMAIL_USE_SSL = True
+EMAIL_TIMEOUT = 1
 #管理员站点
 SERVER_EMAIL = 'xinxinyu2011@163.com'            #The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
 
