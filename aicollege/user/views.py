@@ -110,12 +110,15 @@ def regist(request):
         try:
             #nonlocal rfer
             refer = request.POST['refer_id']
+            refer = int(refer)
             user = User.objects.filter(id__exact=refer)
             if user:
                 pass
             else:
                 return HttpResponse(json.dumps({'error': '查无此人！'}))
         except KeyError:
+            pass
+        except ValueError:
             pass
 
         user1 = User.objects.filter(username__exact=username)
