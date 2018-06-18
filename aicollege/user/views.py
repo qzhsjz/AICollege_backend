@@ -218,20 +218,25 @@ def changeinfo(request):
             email = request.POST['email']
         except KeyError:
             return HttpResponse(json.dumps({'error': '没有email！'}))
+
         uid = request.session['uid']
         user = User.objects.filter(id__exact=uid)
         user = user[0]
         if user:
-            user_dic = model_to_dict(user)
-            response = HttpResponse(json.dumps(user_dic))
-            return response
+            # 保存头像
+            data = request.FILES['imageFile']
+            img = Image.open(data)
+            adress = '/usr/share/nginx/AICollege_frontend/img/'+user.username+'.jpg'
+            img.save(adress)
+            print('头像保存成功')
+            user.username = name
+            user.picture = adress
+            user.email = email
+            user.save()
+            return HttpResponse(json.dumps({'success': '修改成功！'}))
         else:
             return HttpResponse(json.dumps({'error': '无此用户，无法修改！'}))
-        user.username = name
-        user.picture =  userimg
-        user.email = email
-        user.save()
-        return HttpResponse(json.dumps({'success': '修改成功！'}))
+
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
