@@ -35,24 +35,24 @@ def searchCourse(uid, page):
 
 
 # 搜索小节
-def searchSection(uid, cid):
-    user = User.objects.filter(id=uid)[0]
-    course = Course.objects.filter(id=cid, user__id=user.id).select_related()[0]  # 选取uid的所有课程
-    section = Section.objects.filter(course__id=course.id).select_related()
+#def searchSection(uid, cid):
+#    user = User.objects.filter(id=uid)[0]
+#    course = Course.objects.filter(id=cid, user__id=user.id).select_related()[0]  # 选取uid的所有课程
+#    section = Section.objects.filter(course__id=course.id).select_related()
 
-    section1 = []
-    obj_dic = {}
-    obj_dic['length'] = len(section)
-    for o in section:
+#    section1 = []
+#    obj_dic = {}
+#    obj_dic['length'] = len(section)
+#    for o in section:
         # 把Object对象转换成Dict
-        dic1 = {}
-        dic1['section_name'] = o.section_name
-        dic1['videoPath'] = o.videoPath
-        section1.append(dic1)
+#        dic1 = {}
+#        dic1['section_name'] = o.section_name
+#        dic1['videoPath'] = o.videoPath
+#        section1.append(dic1)
 
-    # len1 = max(9,len(section1))
-    obj_dic['data'] = section1
-    return obj_dic
+#    # len1 = max(9,len(section1))
+#   obj_dic['data'] = section1
+#    return obj_dic
 
     # for o in section:
     # 把Object对象转换成Dict
@@ -93,14 +93,14 @@ def getCourseInfoUid(request, page):
 
 
 # 返回用户购买课程对应小节的列表，根据uid,cid（对应课程的所有小节表）（暂时没有考虑免费课程获取小节的情况）
-def getSectionInfoUCid(request, course_id):
-    print(request.COOKIES)
-    user_id = request.session['uid']
-    try:
-        data = searchSection(int(user_id), course_id)  # 获取学生id对应的所有课程的所有信息
-    except Section.DoesNotExist:  ##Course 表查找失败
-        raise Http404("课程小节加载失败")
-    return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
+#def getSectionInfoUCid(request, course_id):
+#    print(request.COOKIES)
+#    user_id = request.session['uid']
+#    try:
+#        data = searchSection(int(user_id), course_id)  # 获取学生id对应的所有课程的所有信息
+#    except Section.DoesNotExist:  ##Course 表查找失败
+#        raise Http404("课程小节加载失败")
+#    return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
 
 
 def judgeCourse(request, cid):
