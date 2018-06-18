@@ -135,4 +135,6 @@ def addCourse(request, cid):
     user = User.objects.get(id=int(uid))
     course = Course.objects.get(id=int(cid))
     course.user.add(user)
-    #course.save()
+    dict = {'Success':'授权成功'}
+    return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
+0
