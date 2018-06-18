@@ -239,7 +239,7 @@ def changeinfo(request):
 def getdata(request):
     # try:
         if(request.method == 'GET'):
-            print(request.session)
+            print(request.COOKIES)
             uid = request.session['id']
             user = User.objects.filter(userid__exact=uid)
             if user:
