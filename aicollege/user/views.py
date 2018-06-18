@@ -175,7 +175,7 @@ def check_id(request):
         if userform.is_valid():
             id = userform.cleaned_data['邀请码']
 
-            user = User.objects.filter(userid__exact=id)
+            user = User.objects.filter(id__exact=id)
             if user:
                 return json.dumps(user)
             else:
@@ -218,7 +218,7 @@ def changeinfo(request):
         except KeyError:
             return HttpResponse(json.dumps({'error': '没有email！'}))
         uid = request.session['id']
-        user = User.objects.filter(userid__exact=uid)
+        user = User.objects.filter(id__exact=uid)
         user = user[0]
         if user:
             user_dic = model_to_dict(user)
@@ -242,7 +242,7 @@ def getdata(request):
         if(request.method == 'GET'):
             print(request.COOKIES)
             uid = request.session['uid']
-            user = User.objects.filter(userid__exact=uid)
+            user = User.objects.filter(id__exact=uid)
             if user:
                 user_dic = model_to_dict(user)
                 response = HttpResponse(json.dumps(user_dic))
