@@ -21,7 +21,13 @@ def searchCourse(uid, page):
     obj_dic['length'] = (len(course) - 0.5) // 9 + 1
     for o in course:
         # 把Object对象转换成Dict
-        course1.append(model_to_dict(o))
+        dic1 = {}
+        dic1['id'] = o.id
+        dic1['course_name'] = o.course_name
+        dic1['course_info'] = o.course_info
+        dic1['teacherName'] = o.teacherName
+        dic1['picPath'] = o.picPath
+        course1.append(dic1)
     len1 = max(9, len(course1))
 
     obj_dic['data'] = course1[(page - 1) * 9:min((page - 1) * 9 + 8, len1 - 1)]
@@ -39,7 +45,10 @@ def searchSection(uid, cid):
     obj_dic['length'] = len(section)
     for o in section:
         # 把Object对象转换成Dict
-        section1.append(model_to_dict(o))
+        dic1 = {}
+        dic1['section_name'] = o.section_name
+        dic1['videoPath'] = o.videoPath
+        section1.append(dic1)
 
     # len1 = max(9,len(section1))
     obj_dic['data'] = section1
@@ -121,7 +130,7 @@ def judgeCourse(request, cid):
     dic2['course_name'] = course1.course_name
     dic2['course_info'] = course1.course_info
     dic2['teacherName'] = course1.teacherName
-
+    dic2['picPath'] = course1.picPath
     #dic.append(model_to_dict(course1))
     dict['course'] = dic2
 
