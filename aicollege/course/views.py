@@ -91,16 +91,26 @@ def getSectionInfoUCid(request,course_id):
 
 def judgeCourse(request,cid):
     print(request.COOKIES)
-    uid = request.session['uid']
+    f = False
+    try:
+        uid = request.session['uid']
+        user = User.objects.filter(id= int(uid))[0]
+        course = Course.objects.filter(id=cid, user__id=user.id).select_related()  # 选取uid的所有课程
+        f= True
+    except KeyError:
+        f = False
     #uid=10
-    user = User.objects.filter(id= int(uid))[0]
-    course = Course.objects.filter(id=cid, user__id=user.id).select_related()  # 选取uid的所有课程
+
     dict = {}
-    dic = []
-    if course:
-        dict['islearn'] = True
+    if f:
+        if course:
+            dict['islearn'] = True
+        else:
+            dict['islearn'] = False
     else:
         dict['islearn'] = False
+
+    dic = []
     course1 = Course.objects.filter(id=cid)[0]
     dic.append(model_to_dict(course1))
     dict['course'] = dic
