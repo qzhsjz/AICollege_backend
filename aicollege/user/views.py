@@ -110,12 +110,15 @@ def regist(request):
         try:
             #nonlocal rfer
             refer = request.POST['refer_id']
+            refer = int(refer)
             user = User.objects.filter(id__exact=refer)
             if user:
                 pass
             else:
                 return HttpResponse(json.dumps({'error': '查无此人！'}))
         except KeyError:
+            pass
+        except ValueError:
             pass
 
         user1 = User.objects.filter(username__exact=username)
@@ -129,6 +132,8 @@ def regist(request):
         # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
         code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-') for i in range(0, 64)]
         code = ''.join(code)
+        if not refer:
+            refer = 0
         newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer)
         newuser.save()
 
@@ -155,9 +160,11 @@ def email_verify(request):
             if user[0].username == username:
                 user[0].emailVerified = True
                 user[0].save()
-                return HttpResponse(json.dumps({'success': '验证成功！'}))
+                # return HttpResponse(json.dumps({'success': '验证成功！'}))
+                return HttpResponse("""验证成功！欢迎使用小智课堂。""")
         else:
-            return HttpResponse(json.dumps({'error': '验证失败！'}))
+            # return HttpResponse(json.dumps({'error': '验证失败！'}))
+            return HttpResponse("""验证失败！请确保你复制的链接正确，或你收到的链接有效。""")
     # except:
     #     return HttpResponse('请求不合法')
 
