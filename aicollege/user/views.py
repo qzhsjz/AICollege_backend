@@ -224,7 +224,7 @@ def changeinfo(request):
         user = user[0]
         if user:
             # 保存头像
-            data = request.FILES['imageFile']
+            data = request.FILES['imagefile']
             img = Image.open(data)
             adress = '/usr/share/nginx/AICollege_frontend/img/'+user.username+'.jpg'
             img.save(adress)
