@@ -13,5 +13,5 @@ urlpatterns = [
     path('picupload', views.input_pic),
     path('getuserinfo', views.getdata),
     path('changeinfo', views.changeinfo),
-    path('quit', views,quit)
+    path('logout', views.logout)
 ]
