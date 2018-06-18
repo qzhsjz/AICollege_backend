@@ -25,6 +25,7 @@ def searchCourse(uid, page):
         dic1['id'] = o.id
         dic1['course_name'] = o.course_name
         dic1['course_info'] = o.course_info
+        dic1['course_price'] = o.course_price
         dic1['teacherName'] = o.teacherName
         dic1['picPath'] = o.picPath
         course1.append(dic1)
@@ -129,6 +130,7 @@ def judgeCourse(request, cid):
     dic2['id'] = course1.id
     dic2['course_name'] = course1.course_name
     dic2['course_info'] = course1.course_info
+    dic2['course_price'] = course1.course_price
     dic2['teacherName'] = course1.teacherName
     dic2['picPath'] = course1.picPath
     #dic.append(model_to_dict(course1))
