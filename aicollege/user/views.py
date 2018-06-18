@@ -51,13 +51,13 @@ def login(request):
             user1_dic = model_to_dict(user1[0])
             response = HttpResponse(json.dumps(user1_dic))
             # response.set_cookie("id", user1_dic['id'])
-            response.session['uid'] = user1_dic['id']
+            request.session['uid'] = user1_dic['id']
             return response
         elif user2:
             user2_dic = model_to_dict(user2[0])
             response = HttpResponse(json.dumps(user2_dic))
             # response.set_cookie("id", user2_dic['id'])
-            response.session['uid'] = user2_dic['id']
+            request.session['uid'] = user2_dic['id']
             return response
         else:
             return HttpResponse(json.dumps({'error': '用户名或密码错误！'}))
