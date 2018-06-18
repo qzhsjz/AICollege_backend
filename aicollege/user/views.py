@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .models import User
 from django.template import loader
 import json
-from django.core.mail import send_mail
+# from django.core.mail import send_mail
 from django.conf import settings
 from PIL import Image
 from django.forms.models import model_to_dict
