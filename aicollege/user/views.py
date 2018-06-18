@@ -29,11 +29,12 @@ def index(request):
 
 
 def login(request):
-    if request.method == 'POST':
+    print(request.COOKIES)
+    if request.method == 'GET':
         #userform = UserForm(request.POST)
         try:
             #nonlocal user
-            user = request.POST['username']
+            user = request.GET['username']
             #password = request.POST['password']
         except KeyError:
             return  HttpResponse("用户名不能为空")
@@ -41,7 +42,7 @@ def login(request):
         try:
             #nonlocal password
             #user = request.POST['username']
-            password = request.POST['password']
+            password = request.GET['password']
         except KeyError:
             return  HttpResponse("密码不能为空")
 
@@ -99,7 +100,6 @@ def regist(request):
 
         user1 = User.objects.filter(username__exact=username)
         user2 = User.objects.filter(email__exact=email)
-        user1.id
         if user1:
             return HttpResponse(json.dumps({'error': '用户名已存在！'}))
         if user2:
@@ -113,8 +113,10 @@ def regist(request):
         newuser.save()
 
 
-        mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://api.aicollege.net/user/emailverify?code=" + code + '&username=' + username
-        # send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email],fail_silently=True)
+        hostname = '39.106.19.27:8080'
+        mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://" + hostname + "/user/emailverify?code=" + code + '&username=' + username
+        a = send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email])
+        print(a)
         print(mailbody)
 
         return HttpResponse(json.dumps({'success': '注册成功！'}))
@@ -174,7 +176,7 @@ def check_id(request):
         if userform.is_valid():
             id = userform.cleaned_data['邀请码']
 
-            user = User.objects.filter(userid__exact=id)
+            user = User.objects.filter(id__exact=id)
             if user:
                 return json.dumps(user)
             else:
@@ -205,21 +207,44 @@ def input_pic(request):
 def changeinfo(request):
     if(request.method == 'POST'):
         try:
-            username = request.POST['username']
+            name = request.POST['username']
         except KeyError:
-            return HttpResponse(json.dumps({'error': '没有此键！'}))
+            return HttpResponse(json.dumps({'error': '没有username！'}))
         try:
             userimg = request.POST['userimg']
         except KeyError:
-            return HttpResponse(json.dumps({'error': '没有此键！'}))
+            return HttpResponse(json.dumps({'error': '没有userimg！'}))
+        try:
+            email = request.POST['email']
+        except KeyError:
+            return HttpResponse(json.dumps({'error': '没有email！'}))
+        uid = request.session['uid']
+        user = User.objects.filter(id__exact=uid)
+        user = user[0]
+        if user:
+            user_dic = model_to_dict(user)
+            response = HttpResponse(json.dumps(user_dic))
+            return response
+        else:
+            return HttpResponse(json.dumps({'error': '无此用户，无法修改！'}))
+        user.username = name
+        user.picture =  userimg
+        user.email = email
+        user.save()
+        return HttpResponse(json.dumps({'success': '修改成功！'}))
+    else:
+        return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
-#根据cookie返回数据
+
+
+#根据session返回数据
 def getdata(request):
     try:
         if(request.method == 'GET'):
-            print(request.session)
-            uid = request.session['id']
-            user = User.objects.filter(userid__exact=uid)
+            print(request.COOKIES)
+            uid = request.session['uid']
+            user = User.objects.filter(id__exact=uid)
+            user = user[0]
             if user:
                 user_dic = model_to_dict(user)
                 response = HttpResponse(json.dumps(user_dic))
@@ -228,5 +253,5 @@ def getdata(request):
                 return HttpResponse(json.dumps({'error': '无此用户！'}))
         else:
             return HttpResponse(json.dumps({'error': '请求不合法！'}))
-    except:
-        return HttpResponse(json.dumps({'error': '请求不合法'}))
+    except KeyError:
+        return HttpResponse(json.dumps({'message': 'Session出错（禁用Cookie）或新用户'}))
