@@ -127,6 +127,8 @@ def judgeCourse(request, cid):
         section1.append(model_to_dict(o))
     dict['section'] = section1
 
+    print(dict)
+
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
 
