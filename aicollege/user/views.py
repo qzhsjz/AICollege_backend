@@ -228,18 +228,18 @@ def input_pic(request):
 #修改信息
 def changeinfo(request):
     if(request.method == 'POST'):
-        try:
-            name = request.POST['username']
-        except KeyError:
-            return HttpResponse(json.dumps({'error': '没有username！'}))
-        try:
-            userimg = request.POST['userimg']
-        except KeyError:
-            return HttpResponse(json.dumps({'error': '没有userimg！'}))
-        try:
-            email = request.POST['email']
-        except KeyError:
-            return HttpResponse(json.dumps({'error': '没有email！'}))
+        #try:
+         #   name = request.POST['username']
+        #except KeyError:
+         #   return HttpResponse(json.dumps({'error': '没有username！'}))
+        #try:
+         #   userimg = request.POST['userimg']
+        #except KeyError:
+        #    return HttpResponse(json.dumps({'error': '没有userimg！'}))
+        #try:
+         #   email = request.POST['email']
+        #except KeyError:
+         #   return HttpResponse(json.dumps({'error': '没有email！'}))
 
         uid = request.session['uid']
         user = User.objects.filter(id__exact=uid)
@@ -251,9 +251,9 @@ def changeinfo(request):
             adress = '/usr/share/nginx/AICollege_frontend/img/'+user.username+'.jpg'
             img.save(adress)
             print('头像保存成功')
-            user.username = name
+            #user.username = name
             user.picture = adress
-            user.email = email
+            #user.email = email
             user.save()
             return HttpResponse(json.dumps({'success': '修改成功！'}))
         else:
