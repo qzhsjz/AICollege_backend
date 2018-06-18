@@ -116,7 +116,7 @@ def regist(request):
         hostname = '39.106.19.27:8080'
         verifyurl = "http://" + hostname + "/user/emailverify?code=" + code + '&username=' + username
         mailbody = "欢迎注册小智课堂！请<a href=" + verifyurl + " target=_blank>点击这里</a>验证邮箱，或手动复制以下链接链接注册：<br>" + verifyurl
-        a = send_mail(subject='小智课堂注册确认', message='', html_message=mailbody, from_email='aicollege@126.com', recipient_list=[email])
+        a = send_mail(subject='小智课堂注册确认', message='', html=mailbody, from_email='aicollege@126.com', recipient_list=[email])
         print(a)
         print(mailbody)
 
