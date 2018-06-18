@@ -67,10 +67,10 @@ def getCourseInfo(request,page):
     return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
 
 #返回用户购买课程列表，根据uid（所有课程的表）
-def getCourseInfoUid(request):
-    user_id = request.COOKIES['id']
+def getCourseInfoUid(request,page):
+    user_id = request.session['uid']
     try:
-        data = searchCourse(int(user_id))  #获取学生id对应的所有课程的所有信息
+        data = searchCourse(int(user_id),int(page))  #获取学生id对应的所有课程的所有信息
 
     except Course.DoesNotExist:  ##Course 表查找失败
         raise Http404("课程加载失败")
@@ -79,7 +79,7 @@ def getCourseInfoUid(request):
 
 #返回用户购买课程对应小节的列表，根据uid,cid（对应课程的所有小节表）（暂时没有考虑免费课程获取小节的情况）
 def getSectionInfoUCid(request,course_id):
-    user_id =  request.COOKIES['id']
+    user_id = request.session['uid']
     try:
         data = searchSection(int(user_id),course_id)  #获取学生id对应的所有课程的所有信息
     except Section.DoesNotExist:  ##Course 表查找失败
@@ -87,8 +87,8 @@ def getSectionInfoUCid(request,course_id):
     return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
 
 def judgeCourse(request,cid):
-    #uid = request.COOKIES['id']
-    uid=10
+    uid = request.session['uid']
+    #uid=10
     user = User.objects.filter(id= int(uid))[0]
     course = Course.objects.filter(id=cid, user__id=user.id).select_related()  # 选取uid的所有课程
     dict = {}

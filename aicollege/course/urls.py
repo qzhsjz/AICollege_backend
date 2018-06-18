@@ -6,7 +6,7 @@ urlpatterns = [
     #ex: /course/
     path('all/<int:page>',views.getCourseInfo),
     #ex: /course/user_id/
-    path('', views.getCourseInfoUid),
+    path('mystudy/<int:page>', views.getCourseInfoUid),
     path('<int:cid>',views.judgeCourse),
     path('<int:course_id>', views.getSectionInfoUCid),
 ]
