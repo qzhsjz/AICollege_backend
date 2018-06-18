@@ -205,15 +205,36 @@ def input_pic(request):
 def changeinfo(request):
     if(request.method == 'POST'):
         try:
-            username = request.POST['username']
+            name = request.POST['username']
         except KeyError:
-            return HttpResponse(json.dumps({'error': '没有此键！'}))
+            return HttpResponse(json.dumps({'error': '没有username！'}))
         try:
             userimg = request.POST['userimg']
         except KeyError:
-            return HttpResponse(json.dumps({'error': '没有此键！'}))
+            return HttpResponse(json.dumps({'error': '没有userimg！'}))
+        try:
+            email = request.POST['email']
+        except KeyError:
+            return HttpResponse(json.dumps({'error': '没有email！'}))
+        uid = request.session['id']
+        user = User.objects.filter(userid__exact=uid)
+        if user:
+            user_dic = model_to_dict(user)
+            response = HttpResponse(json.dumps(user_dic))
+            return response
+        else:
+            return HttpResponse(json.dumps({'error': '无此用户，无法修改！'}))
+        user.username = name
+        user.picture =  userimg
+        user.email = email
+        user.save()
+        return HttpResponse(json.dumps({'success': '修改成功！'}))
+    else:
+        return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
-#根据cookie返回数据
+
+
+#根据session返回数据
 def getdata(request):
     try:
         if(request.method == 'GET'):
