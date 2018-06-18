@@ -218,6 +218,7 @@ def changeinfo(request):
             return HttpResponse(json.dumps({'error': '没有email！'}))
         uid = request.session['id']
         user = User.objects.filter(userid__exact=uid)
+        user = user[0]
         if user:
             user_dic = model_to_dict(user)
             response = HttpResponse(json.dumps(user_dic))
