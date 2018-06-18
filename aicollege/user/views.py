@@ -29,11 +29,11 @@ def index(request):
 
 
 def login(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         #userform = UserForm(request.POST)
         try:
             #nonlocal user
-            user = request.POST['username']
+            user = request.GET['username']
             #password = request.POST['password']
         except KeyError:
             return  HttpResponse("用户名不能为空")
@@ -41,7 +41,7 @@ def login(request):
         try:
             #nonlocal password
             #user = request.POST['username']
-            password = request.POST['password']
+            password = request.GET['password']
         except KeyError:
             return  HttpResponse("密码不能为空")
 
