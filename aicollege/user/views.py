@@ -215,7 +215,7 @@ def changeinfo(request):
 
 #根据cookie返回数据
 def getdata(request):
-    try:
+    # try:
         if(request.method == 'GET'):
             print(request.session)
             uid = request.session['id']
@@ -228,5 +228,5 @@ def getdata(request):
                 return HttpResponse(json.dumps({'error': '无此用户！'}))
         else:
             return HttpResponse(json.dumps({'error': '请求不合法！'}))
-    except:
-        return HttpResponse(json.dumps({'error': '请求不合法'}))
+    # except:
+    #     return HttpResponse(json.dumps({'error': '请求不合法'}))
