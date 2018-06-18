@@ -99,7 +99,6 @@ def judgeCourse(request,cid):
         f= True
     except KeyError:
         f = False
-    #uid=10
 
     dict = {}
     if f:
@@ -124,3 +123,10 @@ def judgeCourse(request,cid):
     dict['section'] = section1
 
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
+
+def addCourse(request,cid):
+    uid = request.session['uid']
+    user = User.objects.filter(id=int(uid))[0]
+    course = Course.objects.filter(id=cid)[0]
+    course.entry_set.add(user)
+    course.save()

@@ -9,4 +9,5 @@ urlpatterns = [
     path('mystudy/<int:page>', views.getCourseInfoUid),
     path('<int:cid>',views.judgeCourse),
     path('<int:course_id>', views.getSectionInfoUCid),
+    path('addtostudy/<int:cid>',views.addCourse),
 ]
