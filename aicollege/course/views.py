@@ -12,7 +12,7 @@ def searchCourse(uid,page):
     if uid == -1:
         course = Course.objects.all()  #选取所有的课程
     else:
-        user = User.objects.filter(id = uid)
+        user = User.objects.filter(id = uid)[0]
         course = Course.objects.filter(user__id = user.id).select_related()  #选取uid的所有课程
 
     course1 = []
@@ -28,7 +28,7 @@ def searchCourse(uid,page):
 
 #搜索小节
 def searchSection(uid,cid):
-    user = User.objects.filter(id = uid)
+    user = User.objects.filter(id = uid)[0]
     course = Course.objects.filter(id=cid, user__id=user.id).select_related()  # 选取uid的所有课程
     section = Section.objects.filter(course__id = course.id).select_related()
 
@@ -89,7 +89,7 @@ def getSectionInfoUCid(request,course_id):
 def judgeCourse(request,cid):
     #uid = request.COOKIES['id']
     uid=10
-    user = User.objects.filter(id= int(uid))
+    user = User.objects.filter(id= int(uid))[0]
     course = Course.objects.filter(id=cid, user__id=user.id).select_related()  # 选取uid的所有课程
     dict = {}
     dic = []
