@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from .models import User
 from django.template import loader
 import json
-# from django.core.mail import send_mail
+from django.core.mail import send_mail as osdmail
 from django.conf import settings
 from PIL import Image
 from django.forms.models import model_to_dict
@@ -136,7 +136,8 @@ def regist(request):
         hostname = '39.106.19.27:8080'
         verifyurl = "http://" + hostname + "/user/emailverify?code=" + code + '&username=' + username
         mailbody = "欢迎注册小智课堂！请<a href=" + verifyurl + " target=_blank>点击这里</a>验证邮箱，或手动复制以下链接链接注册：<br>" + verifyurl
-        a = send_mail(subject='小智课堂注册确认', body='', html=mailbody, from_email='aicollege@126.com', recipient_list=[email])
+        # a = send_mail(subject='小智课堂注册确认', body='', html=mailbody, from_email='aicollege@126.com', recipient_list=[email])
+        a = osdmail(subject='小智课堂注册确认', message='', html_message=mailbody, from_email='aicollege@126.com', recipient_list=[email])
         print(a)
         print(mailbody)
 
