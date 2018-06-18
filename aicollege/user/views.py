@@ -238,11 +238,12 @@ def changeinfo(request):
 
 #根据session返回数据
 def getdata(request):
-    # try:
+    try:
         if(request.method == 'GET'):
             print(request.COOKIES)
             uid = request.session['uid']
             user = User.objects.filter(id__exact=uid)
+            user = user[0]
             if user:
                 user_dic = model_to_dict(user)
                 response = HttpResponse(json.dumps(user_dic))
@@ -251,5 +252,5 @@ def getdata(request):
                 return HttpResponse(json.dumps({'error': '无此用户！'}))
         else:
             return HttpResponse(json.dumps({'error': '请求不合法！'}))
-    # except:
-    #     return HttpResponse(json.dumps({'message': 'Session出错（禁用Cookie）或新用户'}))
+    except KeyError:
+        return HttpResponse(json.dumps({'message': 'Session出错（禁用Cookie）或新用户'}))
