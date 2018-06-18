@@ -29,7 +29,7 @@ def searchCourse(uid,page):
 #搜索小节
 def searchSection(uid,cid):
     user = User.objects.filter(id = uid)[0]
-    course = Course.objects.filter(id=cid, user__id=user.id).select_related()  # 选取uid的所有课程
+    course = Course.objects.filter(id=cid, user__id=user.id).select_related()[0]  # 选取uid的所有课程
     section = Section.objects.filter(course__id = course.id).select_related()
 
     section1 = []
@@ -97,11 +97,11 @@ def judgeCourse(request,cid):
         dict['islearn'] = True
     else:
         dict['islearn'] = False
-    course1 = Course.objects.filter(id=cid)
-    dic.append(model_to_dict(course1[0]))
+    course1 = Course.objects.filter(id=cid)[0]
+    dic.append(model_to_dict(course1))
     dict['course'] = dic
 
-    section = Section.objects.filter(course__id=course.id).select_related()
+    section = Section.objects.filter(course__id=course1.id).select_related()
     section1 = []
     dict['length'] = len(section)
     for o in section:
