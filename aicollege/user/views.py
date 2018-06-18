@@ -293,7 +293,7 @@ def getdata(request):
 
 #退出登录
 def logout(request):
-    if(request.method == 'POST'):
+    if(request.method == 'GET'):
         del request.session['uid']
         return HttpResponse(json.dumps({'success': '注销成功！'}))
     else:
