@@ -29,6 +29,7 @@ def index(request):
 
 
 def login(request):
+    print(request.COOKIES)
     if request.method == 'GET':
         #userform = UserForm(request.POST)
         try:
