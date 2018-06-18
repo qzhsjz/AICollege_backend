@@ -4,12 +4,14 @@ from django.http import HttpResponse
 from .models import User
 from django.template import loader
 import json
-from django.core.mail import send_mail
+from django.core.mail import send_mail as osdmail
 from django.conf import settings
 from PIL import Image
 from django.forms.models import model_to_dict
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.core.mail import EmailMultiAlternatives
+import threading
 
 # Create your views here.
 import random
@@ -22,6 +24,24 @@ class UserForm(forms.Form):
      id = forms.IntegerField(label='邀请码', max_value=1000000000)   # 邀请码
      enctype = "multipart/form-data"   #头像
 
+class EmailThread(threading.Thread):
+    def __init__(self, subject, body, from_email, recipient_list, fail_silently, html):
+        self.subject = subject
+        self.body = body
+        self.recipient_list = recipient_list
+        self.from_email = from_email
+        self.fail_silently = fail_silently
+        self.html = html
+        threading.Thread.__init__(self)
+
+    def run (self):
+        msg = EmailMultiAlternatives(self.subject, self.body, self.from_email, self.recipient_list)
+        if self.html:
+            msg.attach_alternative(self.html, "text/html")
+        msg.send(self.fail_silently)
+
+def send_mail(subject, body, from_email, recipient_list, fail_silently=False, html=None, *args, **kwargs):
+    EmailThread(subject, body, from_email, recipient_list, fail_silently, html).start()
 
 def index(request):
     template = loader.get_template('index.html')
@@ -114,8 +134,10 @@ def regist(request):
 
 
         hostname = '39.106.19.27:8080'
-        mailbody = "欢迎注册小智课堂！请点击以下链接注册：http://" + hostname + "/user/emailverify?code=" + code + '&username=' + username
-        a = send_mail(subject='注册确认',message=mailbody,from_email='aicollege@126.com',recipient_list=[email])
+        verifyurl = "http://" + hostname + "/user/emailverify?code=" + code + '&username=' + username
+        mailbody = "欢迎注册小智课堂！请<a href=" + verifyurl + " target=_blank>点击这里</a>验证邮箱，或手动复制以下链接链接注册：<br>" + verifyurl
+        # a = send_mail(subject='小智课堂注册确认', body='', html=mailbody, from_email='aicollege@126.com', recipient_list=[email])
+        a = osdmail(subject='小智课堂注册确认', message='', html_message=mailbody, from_email='aicollege@126.com', recipient_list=[email])
         print(a)
         print(mailbody)
 
