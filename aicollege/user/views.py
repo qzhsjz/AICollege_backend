@@ -218,7 +218,7 @@ def changeinfo(request):
             email = request.POST['email']
         except KeyError:
             return HttpResponse(json.dumps({'error': '没有email！'}))
-        uid = request.session['id']
+        uid = request.session['uid']
         user = User.objects.filter(id__exact=uid)
         user = user[0]
         if user:
