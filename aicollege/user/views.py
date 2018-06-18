@@ -155,9 +155,11 @@ def email_verify(request):
             if user[0].username == username:
                 user[0].emailVerified = True
                 user[0].save()
-                return HttpResponse(json.dumps({'success': '验证成功！'}))
+                # return HttpResponse(json.dumps({'success': '验证成功！'}))
+                return HttpResponse("""验证成功！欢迎使用小智课堂。""")
         else:
-            return HttpResponse(json.dumps({'error': '验证失败！'}))
+            # return HttpResponse(json.dumps({'error': '验证失败！'}))
+            return HttpResponse("""验证失败！请确保你复制的链接正确，或你收到的链接有效。""")
     # except:
     #     return HttpResponse('请求不合法')
 
