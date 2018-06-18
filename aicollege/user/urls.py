@@ -12,5 +12,6 @@ urlpatterns = [
     path('chkid', views.check_id),
     path('picupload', views.input_pic),
     path('getuserinfo', views.getdata),
-    path('changeinfo', views.changeinfo)
+    path('changeinfo', views.changeinfo),
+    path('quit', views,quit)
 ]

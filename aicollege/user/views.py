@@ -289,3 +289,12 @@ def getdata(request):
             return HttpResponse(json.dumps({'error': '请求不合法！'}))
     except KeyError:
         return HttpResponse(json.dumps({'message': 'Session出错（禁用Cookie）或新用户'}))
+
+
+#退出登录
+def quit(request):
+    if(request.method == 'POST'):
+        del request.session['uid']
+        return HttpResponse(json.dumps({'success': '注销成功！'}))
+    else:
+        return HttpResponse(json.dumps({'error': '请求不合法！'}))
