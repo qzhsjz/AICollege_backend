@@ -241,7 +241,7 @@ def getdata(request):
     # try:
         if(request.method == 'GET'):
             print(request.COOKIES)
-            uid = request.session['id']
+            uid = request.session['uid']
             user = User.objects.filter(userid__exact=uid)
             if user:
                 user_dic = model_to_dict(user)
