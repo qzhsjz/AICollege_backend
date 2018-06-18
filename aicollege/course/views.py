@@ -124,6 +124,7 @@ def judgeCourse(request, cid):
     dict['length'] = len(section)
     for o in section:
         # 把Object对象转换成Dict
+        del o['user']
         section1.append(model_to_dict(o))
     dict['section'] = section1
 
