@@ -114,10 +114,16 @@ def judgeCourse(request, cid):
     else:
         dict['islearn'] = False
 
-    dic = []
+    #dic = []
     course1 = Course.objects.filter(id=cid)[0]
-    dic.append(model_to_dict(course1))
-    dict['course'] = dic
+    dic2 = {}
+    dic2['id'] = course1.id
+    dic2['course_name'] = course1.course_name
+    dic2['course_info'] = course1.course_info
+    dic2['teacherName'] = course1.teacherName
+
+    #dic.append(model_to_dict(course1))
+    dict['course'] = dic2
 
     section = Section.objects.filter(course__id=course1.id).select_related()
     section1 = []
@@ -142,4 +148,3 @@ def addCourse(request, cid):
     course.user.add(user)
     dict = {'Success':'授权成功'}
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
-0
