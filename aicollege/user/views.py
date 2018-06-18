@@ -130,7 +130,7 @@ def regist(request):
 
         # settings.COUNT=settings.COUNT+1   #f分配userID
         # code = random.choices('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-', k=64) # 生成邮件验证码-PY3.6
-        code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-') for i in range(0, 64)]
+        code = [random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789--------____') for i in range(0, 64)]
         code = ''.join(code)
         if not refer:
             refer = 0
