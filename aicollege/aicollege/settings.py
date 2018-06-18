@@ -134,12 +134,13 @@ STATIC_URL = '/static/'
 
 # EMAIL SETTINGS
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.126.com'                   #SMTP地址
-EMAIL_PORT = 465                                 #SMTP端口
-EMAIL_HOST_USER = 'aicollege'       #我自己的邮箱
-EMAIL_HOST_PASSWORD = 'aicollege123'                  #我的邮箱密码
-EMAIL_SUBJECT_PREFIX = u'[小智学院]'            #为邮件Subject-line前缀,默认是'[django]'
-EMAIL_USE_TLS = True                 #与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
+EMAIL_HOST = 'smtp.126.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'aicollege'
+EMAIL_HOST_PASSWORD = 'aicollege123'
+EMAIL_SUBJECT_PREFIX = u'[小智学院]'
+# EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
 #管理员站点
 SERVER_EMAIL = 'xinxinyu2011@163.com'            #The email address that error messages come from, such as those sent to ADMINS and MANAGERS.
 
