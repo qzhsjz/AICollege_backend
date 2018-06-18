@@ -59,9 +59,9 @@ def searchSection(uid,cid):
     #]
 
 #返回初始界面课程的信息,类似index，加入界面时返回申请
-def getCourseInfo(request,index):
+def getCourseInfo(request,page):
     try:
-        data = searchCourse(-1,int(index))  #-1用于表示非用户id，将所有课程推送回来
+        data = searchCourse(-1,int(page))  #-1用于表示非用户id，将所有课程推送回来
     except Course.DoesNotExist:  ##Course 表查找失败
         raise Http404("课程加载失败")
     return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
@@ -90,7 +90,7 @@ def judgeCourse(request,cid):
     #uid = request.COOKIES['id']
     uid=10
     user = User.objects.filter(id= int(uid))
-    course = Course.objects.filter(id=cid, user__id=user.user_id).select_related()  # 选取uid的所有课程
+    course = Course.objects.filter(id=cid, user__id=user.id).select_related()  # 选取uid的所有课程
     dict = {}
     dic = []
     if course:
