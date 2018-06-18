@@ -127,6 +127,6 @@ def judgeCourse(request,cid):
 def addCourse(request,cid):
     uid = request.session['uid']
     user = User.objects.get(id=int(uid))
-    course = Course.objects.get(id=cid)
+    course = Course.objects.get(id=int(cid))
     course.entry_set.add(user)
     course.save()
