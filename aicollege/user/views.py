@@ -256,7 +256,7 @@ def changeinfo(request):
             data = request.FILES['file']
             img = Image.open(data)
             webdir = '/usr/share/nginx/AICollege_frontend'
-            adress = '/img/avatar/'+user.id+'.jpg'
+            adress = '/img/avatar/' + str(user.id) + '.jpg'
             img.save(webdir + adress)
             print('头像保存成功')
             #user.username = name
