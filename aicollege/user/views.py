@@ -134,7 +134,7 @@ def regist(request):
         code = ''.join(code)
         if not refer:
             refer = 0
-        newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer)
+        newuser = User(username=username,password=password,email=email,emailVerified=False,emailCode=code,referrer=refer, picture='/img/1.jpg')
         newuser.save()
 
 
