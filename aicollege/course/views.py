@@ -13,7 +13,7 @@ def searchCourse(uid, page):
     if uid == -1:
         course = Course.objects.all()  # 选取所有的课程
     else:
-        user = User.objects.filter(id=uid)[0]
+        user = User.objects.get(id=uid)
         course = Course.objects.filter(user__id=user.id).select_related()  # 选取uid的所有课程
 
     course1 = []
