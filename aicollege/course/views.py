@@ -1,9 +1,9 @@
 # Create your views here.
 from django.http import Http404, JsonResponse
 from .models import Course, Section
+from django.db.models import Q
 from user.models import User
 from django.forms.models import model_to_dict
-
 
 ##进入初始界面的时候，根据用户ID和推送算法，加载课程信息
 # 根据需求返回课程信息
@@ -84,8 +84,8 @@ def getCourseInfo(request, page):
 # 返回用户购买课程列表，根据uid（所有课程的表）
 def getCourseInfoUid(request, page):
     print(request.COOKIES)
-    user_id = request.session['uid']
     try:
+        user_id = request.session['uid']
         data = searchCourse(int(user_id), int(page))  # 获取学生id对应的所有课程的所有信息
 
     except Course.DoesNotExist:  ##Course 表查找失败
@@ -159,3 +159,31 @@ def addCourse(request, cid):
     course.user.add(user)
     dict = {'Success':'授权成功'}
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
+
+def keySearch(request,key):
+
+    if not key:
+        dict = {'Error':'请输入关键词'}
+        return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
+
+    obj_dic = {}
+    try:
+        #查询课程名 | 查询教师
+        post_list = Course.objects.filter(Q(course_name__icontains = key) | Q(teacherName__icontains = key))
+        course1 = []
+
+        obj_dic['length'] = len(post_list) #查找结果个数
+        for o in post_list:
+            # 把Object对象转换成Dict
+            dic1 = {}
+            dic1['id'] = o.id
+            dic1['course_name'] = o.course_name
+            dic1['course_info'] = o.course_info
+            dic1['course_price'] = o.course_price
+            dic1['teacherName'] = o.teacherName
+            dic1['picPath'] = o.picPath
+            course1.append(dic1)
+
+    except Course.DoesNotExist:  ##Course 表查找失败
+        raise Http404("课程加载失败")
+    return JsonResponse(obj_dic, safe=False, json_dumps_params={'ensure_ascii': False})
