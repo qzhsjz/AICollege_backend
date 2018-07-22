@@ -24,6 +24,9 @@ class User(models.Model):
     #推荐人，通过用户ID来绑定
     referrer = models.IntegerField()
 
+    #关联的QQ
+    qq_openid = models.CharField(max_length=64)
+
 #Teacher,Student 扩展类
 class Teacher(User):
     job_title = models.CharField(max_length = 255)
