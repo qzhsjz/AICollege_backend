@@ -301,4 +301,6 @@ def logout(request):
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
 
-#第三方登录
+#QQ第三方登录
+def qq_login(request):
+    
