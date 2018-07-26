@@ -26,6 +26,8 @@ class User(models.Model):
 
     #关联的QQ
     qq_openid = models.CharField(max_length=64)
+    qq_name = models.CharField(max_length=50)
+    qq_picture= models.CharField(max_length=255)
 
 #Teacher,Student 扩展类
 class Teacher(User):

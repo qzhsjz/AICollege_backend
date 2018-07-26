@@ -303,4 +303,33 @@ def logout(request):
 
 #QQ第三方登录
 def qq_login(request):
-    
+    if request.method == 'GET':
+        try:
+            qq_id = request.GET['qqid']
+        except KeyError:
+            return  HttpResponse("QQ_openid不能为空")
+
+        user1 = User.objects.filter(qq_openid__exact=qq_id)
+        if user1:
+            user1_dic = model_to_dict(user1[0])
+            response = HttpResponse(json.dumps(user1_dic))
+            # response.set_cookie("id", user1_dic['id'])
+            request.session['uid'] = user1_dic['id']
+            return response
+        else:
+            try:
+                qq_name = request.GET['qqname']
+            except KeyError:
+                return HttpResponse("QQ_Username不能为空")
+            try:
+                qq_picture = request.GET['qqpicture']
+            except KeyError:
+                return HttpResponse("QQ_picture不能为空")
+            newuser = User(qq_name=qq_name,emailVerified=False, referrer=0, qq_picture=qq_picture)
+            newuser.save()
+            request.session['uid'] = newuser.id
+            user1_dic = model_to_dict(newuser)
+            response = HttpResponse(json.dumps(user1_dic))
+            return response
+    else:
+        return HttpResponse(json.dumps({"error": "请求不合法！"}))
