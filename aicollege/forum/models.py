@@ -1,5 +1,5 @@
 from django.db import models
-from aicollege.course.models import Course,Section
+from course.models import Course,Section
 # Create your models here.
 
 class pian:
