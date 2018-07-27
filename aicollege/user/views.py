@@ -307,7 +307,7 @@ def qq_login(request):
         try:
             qq_id = request.GET['qqid']
         except KeyError:
-            return  HttpResponse("QQ_openid不能为空")
+            return  HttpResponse(json.dumps({"error": "QQ_openid不能为空"}))
 
         user1 = User.objects.filter(qq_openid__exact=qq_id)
         if user1:
@@ -320,12 +320,46 @@ def qq_login(request):
             try:
                 qq_name = request.GET['qqname']
             except KeyError:
-                return HttpResponse("QQ_Username不能为空")
+                return HttpResponse(json.dumps({"error": "QQ_Username不能为空"}))
             try:
                 qq_picture = request.GET['qqpicture']
             except KeyError:
-                return HttpResponse("QQ_picture不能为空")
+                return HttpResponse(json.dumps({"error": "QQ_picture不能为空"}))
             newuser = User(qq_name=qq_name,emailVerified=False, referrer=0, qq_picture=qq_picture)
+            newuser.save()
+            request.session['uid'] = newuser.id
+            user1_dic = model_to_dict(newuser)
+            response = HttpResponse(json.dumps(user1_dic))
+            return response
+    else:
+        return HttpResponse(json.dumps({"error": "请求不合法！"}))
+
+
+#微信登录
+def wechat_login(request):
+    if request.method == 'GET':
+        try:
+            wx_id = request.GET['wxid']
+        except KeyError:
+            return  HttpResponse(json.dumps({"error": "微信的openid不能为空"}))
+
+        user1 = User.objects.filter(wx_id__exact=wx_id)
+        if user1:
+            user1_dic = model_to_dict(user1[0])
+            response = HttpResponse(json.dumps(user1_dic))
+            # response.set_cookie("id", user1_dic['id'])
+            request.session['uid'] = user1_dic['id']
+            return response
+        else:
+            try:
+                wx_name = request.GET['wxname']
+            except KeyError:
+                return HttpResponse(json.dumps({"error": "wx_Username不能为空"}))
+            try:
+                wx_picture = request.GET['wxpicture']
+            except KeyError:
+                return HttpResponse(json.dumps({"error": "wx_picture不能为空"}))
+            newuser = User(wx_name=wx_name,emailVerified=False, referrer=0, wx_picture=wx_picture)
             newuser.save()
             request.session['uid'] = newuser.id
             user1_dic = model_to_dict(newuser)
