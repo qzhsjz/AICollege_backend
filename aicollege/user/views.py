@@ -341,7 +341,7 @@ def qq_login(request):
         #对各个参数进行URL编码
         ec_openid = urlquote(qq_id+'&')
         ec_openkey = urlquote(qq_key+'&')
-        appid = urlquote(1105892740+'&')
+        appid = urlquote('1105892740'+'&')
         ec_pf = urlquote(pf+'&')
         ec_sig = urlquote(sig+'&')
         ec_format = urlquote('json&')
