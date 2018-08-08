@@ -12,7 +12,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 import threading
-from urllib import request
+from urllib import request,parse
 import urllib
 from django.utils.http import urlquote
 from hashlib import sha1
@@ -321,11 +321,16 @@ def qq_login(request):
         except KeyError:
             return  HttpResponse(json.dumps({"error": "QQ:openkey不能为空"}))
 
+        try:
+            pf = request.GET['pf']
+        except KeyError:
+            return  HttpResponse(json.dumps({"error": "QQ:pf不能为空"}))
+
         url = r'http://openapi.sparta.html5.qq.com/v3/user/get_info'
         uri = r'/v3/user/get_info'
         #处理appkey.....
         ecurl = urlquote('/v3/user/get_info')
-        key = 'appid=1105892740&format=json&openid='+qq_id+'&openkey='+qq_key+'&pf=qzone'
+        key = 'appid=1105892740&format=json&openid='+qq_id+'&openkey='+qq_key+'&pf='+pf
         eckey = urlquote(key)
 
         s_string = 'GET&'+ecurl+'&'+eckey
@@ -333,12 +338,26 @@ def qq_login(request):
         sign = hmac.new(appkey, s_string, sha1).digest()
         sig = base64.b64encode(sign)
 
-        data = {
-            'openid': qq_id,
-            'appid': 1105892740
+        #对各个参数进行URL编码
+        ec_openid = urlquote(qq_id+'&')
+        ec_openkey = urlquote(qq_key+'&')
+        appid = urlquote(1105892740+'&')
+        ec_pf = urlquote(pf+'&')
+        ec_sig = urlquote(sig+'&')
+        ec_format = urlquote('json&')
 
+        data = {
+            'openid': ec_openid,
+            'openkey': ec_openkey,
+            'appid': appid,
+            'sig': ec_sig,
+            'pf': ec_pf,
+            'format': ec_format
         }
-        req = request.Request(url, )
+        data = parse.urlencode(data).encode('utf-8')
+        req = request.urlopen(url,data)
+        page = req.read()
+        result = json.load(page)
 
         user1 = User.objects.filter(qq_openid__exact=qq_id)
         if user1:
@@ -348,20 +367,19 @@ def qq_login(request):
             request.session['uid'] = user1_dic['id']
             return response
         else:
-            try:
-                qq_name = request.GET['qqname']
-            except KeyError:
-                return HttpResponse(json.dumps({"error": "QQ_Username不能为空"}))
-            try:
-                qq_picture = request.GET['qqpicture']
-            except KeyError:
-                return HttpResponse(json.dumps({"error": "QQ_picture不能为空"}))
-            newuser = User(qq_name=qq_name,emailVerified=False, referrer=0, qq_picture=qq_picture)
-            newuser.save()
-            request.session['uid'] = newuser.id
-            user1_dic = model_to_dict(newuser)
-            response = HttpResponse(json.dumps(user1_dic))
-            return response
+            if result[0]:
+                qq_name = result[3]
+                qq_picture = result[8]
+
+                newuser = User(qq_name=qq_name, emailVerified=False, referrer=0, qq_picture=qq_picture)
+                newuser.save()
+                request.session['uid'] = newuser.id
+                user1_dic = model_to_dict(newuser)
+                response = HttpResponse(json.dumps(user1_dic))
+                return response
+            else:
+                return HttpResponse(json.dumps({"error": "请求用户信息返回码错误"}))
+
     else:
         return HttpResponse(json.dumps({"error": "请求不合法！"}))
 
