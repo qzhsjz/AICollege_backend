@@ -12,6 +12,12 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 import threading
+from urllib import request
+import urllib
+from django.utils.http import urlquote
+from hashlib import sha1
+import hmac
+import base64
 
 # Create your views here.
 import random
@@ -300,14 +306,39 @@ def logout(request):
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
-
+#APPID: 1105892740
+#APPKEY: jW6r4KlTkkIJ5Vbe
 #QQ第三方登录
 def qq_login(request):
     if request.method == 'GET':
         try:
-            qq_id = request.GET['qqid']
+            qq_id = request.GET['openid']
         except KeyError:
-            return  HttpResponse(json.dumps({"error": "QQ_openid不能为空"}))
+            return  HttpResponse(json.dumps({"error": "QQ:openid不能为空"}))
+
+        try:
+            qq_key = request.GET['openkey']
+        except KeyError:
+            return  HttpResponse(json.dumps({"error": "QQ:openkey不能为空"}))
+
+        url = r'http://openapi.sparta.html5.qq.com/v3/user/get_info'
+        uri = r'/v3/user/get_info'
+        #处理appkey.....
+        ecurl = urlquote('/v3/user/get_info')
+        key = 'appid=1105892740&format=json&openid='+qq_id+'&openkey='+qq_key+'&pf=qzone'
+        eckey = urlquote(key)
+
+        s_string = 'GET&'+ecurl+'&'+eckey
+        appkey = 'jW6r4KlTkkIJ5Vbe&'
+        sign = hmac.new(appkey, s_string, sha1).digest()
+        sig = base64.b64encode(sign)
+
+        data = {
+            'openid': qq_id,
+            'appid': 1105892740
+
+        }
+        req = request.Request(url, )
 
         user1 = User.objects.filter(qq_openid__exact=qq_id)
         if user1:
