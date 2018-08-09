@@ -14,4 +14,5 @@ urlpatterns = [
     path('getuserinfo', views.getdata),
     path('changeinfo', views.changeinfo),
     path('logout', views.logout)
+    path('shopcar', views.cart)
 ]
