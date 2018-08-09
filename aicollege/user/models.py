@@ -35,7 +35,7 @@ class User(models.Model):
     wx_picture = models.CharField(max_length=255)
 
     # 购物车
-    cart = models.CharField(max_length=65535)
+    cart = models.TextField()
 
 #Teacher,Student 扩展类
 class Teacher(User):
