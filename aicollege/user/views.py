@@ -428,3 +428,5 @@ def cart(request):
         user = user[0]
         user.cart = request.POST['data']
         return HttpResponse(json.dumps({"success": "OK"}))
+    else:
+        return HttpResponse(json.dumps({"error": "请求不合法！"}))
