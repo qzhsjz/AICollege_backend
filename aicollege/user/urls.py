@@ -13,6 +13,6 @@ urlpatterns = [
     path('picupload', views.input_pic),
     path('getuserinfo', views.getdata),
     path('changeinfo', views.changeinfo),
-    path('logout', views.logout)
-    path('shopcar', views.cart)
+    path('logout', views.logout),
+    path('shopcar', views.cart),
 ]
