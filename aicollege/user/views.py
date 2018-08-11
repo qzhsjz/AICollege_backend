@@ -392,6 +392,22 @@ def wechat_login(request):
         except KeyError:
             return  HttpResponse(json.dumps({"error": "微信的openid不能为空"}))
 
+        wx_id = 000    #微信的APPID
+        url = r'https://open.weixin.qq.com/connect/qrconnect?' \
+              r'appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect'
+        ec_url = parse.urlencode(url).encode('utf-8')
+
+        data = {
+            'appid' : wx_id,
+            'redirect_uri' : ec_url,
+            'response_type' : 'code',
+            'scope' : 'snsapi_login'
+        }
+        data = parse.urlencode(data).encode('utf-8')
+        req = request.urlopen(url, data)
+        page = req.read()
+        result = json.load(page)
+
         user1 = User.objects.filter(wx_id__exact=wx_id)
         if user1:
             user1_dic = model_to_dict(user1[0])
