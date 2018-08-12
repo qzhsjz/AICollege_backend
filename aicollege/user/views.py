@@ -434,7 +434,10 @@ def wechat_login(request):
             page = req.read()
             res = json.load(page)
 
-            wx_name = res["nickname"]
+            #注意,这里有个坑,res['nickname']表面上是unicode编码,但是里面的串却是str的编码,
+            # 举个例子,res['nickname']的返回值可能是这种形式u'\xe9\x97\xab\xe5\xb0\x8f\xe8\x83\x96',
+            # 直接存到数据库会是乱码.必须要转成unicode的编码
+            wx_name = res["nickname"].encode('iso8859-1').decode('utf-8')
             wx_picture = res["headimgurl"]
 
             newuser = User(wx_name=wx_name,emailVerified=False, referrer=0, wx_picture=wx_picture)
