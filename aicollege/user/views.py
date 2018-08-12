@@ -388,25 +388,32 @@ def qq_login(request):
 def wechat_login(request):
     if request.method == 'GET':
         try:
-            wx_id = request.GET['wxid']
+            code = request.GET['code']
         except KeyError:
-            return  HttpResponse(json.dumps({"error": "微信的openid不能为空"}))
+            return  HttpResponse(json.dumps({"error": "微信code出错"}))
 
-        wx_id = 000    #微信的APPID
-        url = r'https://open.weixin.qq.com/connect/qrconnect?' \
-              r'appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect'
-        ec_url = parse.urlencode(url).encode('utf-8')
+        try:
+            state = request.GET['state']
+        except KeyError:
+            return  HttpResponse(json.dumps({"error": "微信state出错"}))
 
+        url = r'https://api.weixin.qq.com/sns/oauth2/access_token'
+        wx_id = 000
+        secret = 111
         data = {
             'appid' : wx_id,
-            'redirect_uri' : ec_url,
-            'response_type' : 'code',
-            'scope' : 'snsapi_login'
+            'secret' : secret,
+            'code' : code,
+            'grant_type' : 'authorization_code'
         }
+
         data = parse.urlencode(data).encode('utf-8')
         req = request.urlopen(url, data)
         page = req.read()
         result = json.load(page)
+
+        openid = result["openid"]
+        access_token = result["access_token"]
 
         user1 = User.objects.filter(wx_id__exact=wx_id)
         if user1:
@@ -416,14 +423,20 @@ def wechat_login(request):
             request.session['uid'] = user1_dic['id']
             return response
         else:
-            try:
-                wx_name = request.GET['wxname']
-            except KeyError:
-                return HttpResponse(json.dumps({"error": "wx_Username不能为空"}))
-            try:
-                wx_picture = request.GET['wxpicture']
-            except KeyError:
-                return HttpResponse(json.dumps({"error": "wx_picture不能为空"}))
+            #接下来要调出用户信息了！！！
+            url = r'https://api.weixin.qq.com/sns/userinfo'
+            para = {
+                'access_token': access_token,
+                'openid' : openid
+            }
+            para = parse.urlencode(para).encode('utf-8')
+            req = request.urlopen(url, para)
+            page = req.read()
+            res = json.load(page)
+
+            wx_name = res["nickname"]
+            wx_picture = res["headimgurl"]
+
             newuser = User(wx_name=wx_name,emailVerified=False, referrer=0, wx_picture=wx_picture)
             newuser.save()
             request.session['uid'] = newuser.id
