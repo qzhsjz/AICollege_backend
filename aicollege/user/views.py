@@ -450,15 +450,18 @@ def wechat_login(request):
         return HttpResponse(json.dumps({"error": "请求不合法！"}))
 
 def cart(request):
-    if request.method == 'GET':
-        user = User.objects.filter(id__exact=request.session['uid'])
-        user = user[0]
-        response = HttpResponse(user.cart)
-        return response
-    elif request.method == 'POST':
-        user = User.objects.filter(id__exact=request.session['uid'])
-        user = user[0]
-        user.cart = request.POST['data']
-        return HttpResponse(json.dumps({"success": "OK"}))
+    if request.session.get('uid') is None:
+        return HttpResponse(json.dumps({"error": "请登录！"}))
     else:
-        return HttpResponse(json.dumps({"error": "请求不合法！"}))
+        if request.method == 'GET':
+            user = User.objects.filter(id__exact=request.session['uid'])
+            user = user[0]
+            response = HttpResponse(user.cart)
+            return response
+        elif request.method == 'POST':
+            user = User.objects.filter(id__exact=request.session['uid'])
+            user = user[0]
+            user.cart = request.POST['data']
+            return HttpResponse(json.dumps({"success": "OK"}))
+        else:
+            return HttpResponse(json.dumps({"error": "请求不合法！"}))
