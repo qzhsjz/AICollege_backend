@@ -450,6 +450,10 @@ def wechat_login(request):
         return HttpResponse(json.dumps({"error": "请求不合法！"}))
 
 def cart(request):
+    print(request.body)
+    print(request.POST)
+    print(request.GET)
+    print(request.session)
     if request.session.get('uid') is None:
         return HttpResponse(json.dumps({"error": "请登录！"}))
     else:
