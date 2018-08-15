@@ -461,7 +461,7 @@ def cart(request):
         elif request.method == 'POST':
             user = User.objects.filter(id__exact=request.session['uid'])
             user = user[0]
-            user.cart = request.POST['data']
+            user.cart = request.body
             return HttpResponse(json.dumps({"success": "OK"}))
         else:
             return HttpResponse(json.dumps({"error": "请求不合法！"}))
