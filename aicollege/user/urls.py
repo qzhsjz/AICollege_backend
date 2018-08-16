@@ -15,4 +15,6 @@ urlpatterns = [
     path('changeinfo', views.changeinfo),
     path('logout', views.logout),
     path('shopcar', views.cart),
+    path('QQlogin', views.qq_login),
+    path('wxlogin', views.wechat_login),
 ]
