@@ -11,6 +11,6 @@ urlpatterns = [
     #path('<int:course_id>', views.getSectionInfoUCid),
     path('addtostudy/<int:cid>',views.addCourse),
     path(r'^keysearch/(?P<key>\w+)/$',views.keySearch),
-    path('addEvaluation/<dict:dic>',views.addEvaluation),
+    path('addEvaluation',views.addEvaluation),
     path('getevaluation/<int:sid>',views.getEvaluation),
 ]
