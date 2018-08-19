@@ -191,9 +191,9 @@ def keySearch(request,key):
 
 
 #获取一条评论,参数为字典类型，包含sid和str
-def addEvaluation(request,dic1):
+def addEvaluation(request):
     uid = request.session['uid']
-    sid = dic1['sid']  #篇id
+    sid = request.GET['sid']  #篇id
 
     try:
         user = User.objects.get(id = uid)
@@ -208,7 +208,7 @@ def addEvaluation(request,dic1):
     dic['uid'] = uid
     dic['username'] = user.username
     dic['userpic'] = user.picture
-    dic['str'] = dic1['str']
+    dic['str'] = request.GET['str']
 
     section.evaluation.append(dic)
     #pian1.length = pian1.length+1
