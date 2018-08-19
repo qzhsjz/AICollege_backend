@@ -142,6 +142,7 @@ def judgeCourse(request, cid):
     for o in section:
         # 把Object对象转换成Dict
         dic1={}
+        dic1['section_id'] = o.id
         dic1['section_name'] = o.section_name
         dic1['videoPath'] = o.videoPath
         section1.append(dic1)
@@ -187,3 +188,41 @@ def keySearch(request,key):
     except Course.DoesNotExist:  ##Course 表查找失败
         raise Http404("课程加载失败")
     return JsonResponse(obj_dic, safe=False, json_dumps_params={'ensure_ascii': False})
+
+
+#获取一条评论,参数为字典类型，包含sid和str
+def addEvaluation(request,dic1):
+    uid = request.session['uid']
+    sid = dic1['sid']  #篇id
+
+    try:
+        user = User.objects.get(id = uid)
+    except User.DoesNotExist:
+        raise Http404("用户查找失败")
+    try:
+        section = Section.objects.get(id=sid)
+    except Section.DoesNotExist:
+        raise Http404("视频查找失败")
+
+    dic = {}
+    dic['uid'] = uid
+    dic['username'] = user.username
+    dic['userpic'] = user.picture
+    dic['str'] = dic1['str']
+
+    section.evaluation.append(dic)
+    #pian1.length = pian1.length+1
+    dict = {'Success': '添加成功'}
+    return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
+
+#返回一小节对应的所有评论
+def getEvaluation(request,sid):
+    try:
+        section = Section.objects.get(id = sid)
+    except Section.DoesNotExist:
+        raise Http404("此页查找失败")
+    dict = {}
+    dic = section.evaluation
+    dict['length'] = len(dic)
+    dict['evaluation'] = dic
+    return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
