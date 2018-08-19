@@ -18,11 +18,24 @@ class User(models.Model):
     #用户邮箱
     email = models.EmailField()
     emailVerified = models.BooleanField()
-    emailCode = models.CharField(max_length=64)
+    emailCode = models.CharField(max_length=64, default=0)
     #身份验证，是否为老师
     isTeacher = models.BooleanField(default=False)
     #推荐人，通过用户ID来绑定
     referrer = models.IntegerField()
+
+    #关联的QQ
+    qq_openid = models.CharField(max_length=64)
+    qq_name = models.CharField(max_length=50)
+    qq_picture = models.CharField(max_length=255)
+
+    #关联微信
+    wx_id = models.CharField(max_length=64)
+    wx_name = models.CharField(max_length=50)
+    wx_picture = models.CharField(max_length=255)
+
+    # 购物车
+    cart = models.TextField()
 
 #Teacher,Student 扩展类
 class Teacher(User):

@@ -12,6 +12,12 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 import threading
+from urllib import request,parse
+import urllib
+from django.utils.http import urlquote
+from hashlib import sha1
+import hmac
+import base64
 
 # Create your views here.
 import random
@@ -299,3 +305,166 @@ def logout(request):
         return HttpResponse(json.dumps({'success': '注销成功！'}))
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
+
+#APPID: 1105892740
+#APPKEY: jW6r4KlTkkIJ5Vbe
+#QQ第三方登录
+def qq_login(request):
+    if request.method == 'GET':
+        try:
+            qq_id = request.GET['openid']
+        except KeyError:
+            return  HttpResponse(json.dumps({"error": "QQ:openid不能为空"}))
+
+        try:
+            qq_key = request.GET['openkey']
+        except KeyError:
+            return  HttpResponse(json.dumps({"error": "QQ:openkey不能为空"}))
+
+        try:
+            pf = request.GET['pf']
+        except KeyError:
+            return  HttpResponse(json.dumps({"error": "QQ:pf不能为空"}))
+
+        url = r'http://openapi.sparta.html5.qq.com/v3/user/get_info'
+        uri = r'/v3/user/get_info'
+        #处理appkey.....
+        ecurl = urlquote('/v3/user/get_info')
+        key = 'appid=1105892740&format=json&openid='+qq_id+'&openkey='+qq_key+'&pf='+pf
+        eckey = urlquote(key)
+
+        s_string = 'GET&'+ecurl+'&'+eckey
+        appkey = 'jW6r4KlTkkIJ5Vbe&'
+        sign = hmac.new(appkey, s_string, sha1).digest()
+        sig = base64.b64encode(sign)
+
+        #对各个参数进行URL编码
+        ec_openid = urlquote(qq_id+'&')
+        ec_openkey = urlquote(qq_key+'&')
+        appid = urlquote('1105892740'+'&')
+        ec_pf = urlquote(pf+'&')
+        ec_sig = urlquote(sig+'&')
+        ec_format = urlquote('json&')
+
+        data = {
+            'openid': ec_openid,
+            'openkey': ec_openkey,
+            'appid': appid,
+            'sig': ec_sig,
+            'pf': ec_pf,
+            'format': ec_format
+        }
+        data = parse.urlencode(data).encode('utf-8')
+        req = request.urlopen(url,data)
+        page = req.read()
+        result = json.load(page)
+
+        user1 = User.objects.filter(qq_openid__exact=qq_id)
+        if user1:
+            user1_dic = model_to_dict(user1[0])
+            response = HttpResponse(json.dumps(user1_dic))
+            # response.set_cookie("id", user1_dic['id'])
+            request.session['uid'] = user1_dic['id']
+            return response
+        else:
+            if result[0]:
+                qq_name = result[3]
+                qq_picture = result[8]
+
+                newuser = User(qq_name=qq_name, emailVerified=False, referrer=0, qq_picture=qq_picture)
+                newuser.save()
+                request.session['uid'] = newuser.id
+                user1_dic = model_to_dict(newuser)
+                response = HttpResponse(json.dumps(user1_dic))
+                return response
+            else:
+                return HttpResponse(json.dumps({"error": "请求用户信息返回码错误"}))
+
+    else:
+        return HttpResponse(json.dumps({"error": "请求不合法！"}))
+
+
+#微信登录
+def wechat_login(request):
+    if request.method == 'GET':
+        try:
+            code = request.GET['code']
+        except KeyError:
+            return  HttpResponse(json.dumps({"error": "微信code出错"}))
+
+        try:
+            state = request.GET['state']
+        except KeyError:
+            return  HttpResponse(json.dumps({"error": "微信state出错"}))
+
+        url = r'https://api.weixin.qq.com/sns/oauth2/access_token'
+        wx_id = 000
+        secret = 111
+        data = {
+            'appid' : wx_id,
+            'secret' : secret,
+            'code' : code,
+            'grant_type' : 'authorization_code'
+        }
+
+        data = parse.urlencode(data).encode('utf-8')
+        req = request.urlopen(url, data)
+        page = req.read()
+        result = json.load(page)
+
+        openid = result["openid"]
+        access_token = result["access_token"]
+
+        user1 = User.objects.filter(wx_id__exact=wx_id)
+        if user1:
+            user1_dic = model_to_dict(user1[0])
+            response = HttpResponse(json.dumps(user1_dic))
+            # response.set_cookie("id", user1_dic['id'])
+            request.session['uid'] = user1_dic['id']
+            return response
+        else:
+            #接下来要调出用户信息了！！！
+            url = r'https://api.weixin.qq.com/sns/userinfo'
+            para = {
+                'access_token': access_token,
+                'openid' : openid
+            }
+            para = parse.urlencode(para).encode('utf-8')
+            req = request.urlopen(url, para)
+            page = req.read()
+            res = json.load(page)
+
+            #注意,这里有个坑,res['nickname']表面上是unicode编码,但是里面的串却是str的编码,
+            # 举个例子,res['nickname']的返回值可能是这种形式u'\xe9\x97\xab\xe5\xb0\x8f\xe8\x83\x96',
+            # 直接存到数据库会是乱码.必须要转成unicode的编码
+            wx_name = res["nickname"].encode('iso8859-1').decode('utf-8')
+            wx_picture = res["headimgurl"]
+
+            newuser = User(wx_name=wx_name,emailVerified=False, referrer=0, wx_picture=wx_picture)
+            newuser.save()
+            request.session['uid'] = newuser.id
+            user1_dic = model_to_dict(newuser)
+            response = HttpResponse(json.dumps(user1_dic))
+            return response
+    else:
+        return HttpResponse(json.dumps({"error": "请求不合法！"}))
+
+def cart(request):
+    print(request.COOKIES)
+    print(request.session.get('uid'))
+    if request.session.get('uid') is None:
+        return HttpResponse(json.dumps({"error": "请登录！"}))
+    else:
+        if request.method == 'GET':
+            user = User.objects.filter(id__exact=request.session['uid'])
+            user = user[0]
+            response = HttpResponse(user.cart)
+            return response
+        elif request.method == 'POST':
+            user = User.objects.filter(id__exact=request.session['uid'])
+            user = user[0]
+            user.cart = request.body
+            user.save()
+            return HttpResponse(json.dumps({"success": "OK"}))
+        else:
+            return HttpResponse(json.dumps({"error": "请求不合法！"}))
