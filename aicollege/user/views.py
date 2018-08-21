@@ -57,7 +57,7 @@ def index(request):
 def needmail(func):
     def inner(*args, **kwargs):  # 1
         req = args[0]
-        uid =  req.session.get('uid')
+        uid = req.session.get('uid')
         if uid:
             user = User.objects.filter(id__exact=uid)
             if not user.emailVerified:
