@@ -204,6 +204,8 @@ def check_email(request):
         user2 = User.objects.filter(email__exact=email)
         if user2:
             return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
+        else:
+            return HttpResponse(json.dumps({'true': '邮箱可以注册！'}))
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
