@@ -168,7 +168,7 @@ def addCourse(request, cid):
 def keySearch(request,key):
 
     if not key:
-        dict = {'Error':'请输入关键词'}
+        dict = {'Error': '未购买此课程！'}
         return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
     obj_dic = {}
