@@ -197,14 +197,14 @@ def keySearch(request,key):
 #获取一条评论,参数为字典类型，包含sid和str
 def addEvaluation(request):
     uid = request.session['uid']
-    sid = (int)(request.GET['sid'])  #篇id
+    sid = request.GET['sid']  #篇id
 
     try:
-        user = User.objects.get(id = uid)
+        user = User.objects.get(id = int(uid))
     except User.DoesNotExist:
         raise Http404("用户查找失败")
     try:
-        section = Section.objects.get(id = sid)
+        section = Section.objects.get(id = int(sid))
     except Section.DoesNotExist:
         raise Http404("视频查找失败")
 
