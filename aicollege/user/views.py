@@ -60,6 +60,7 @@ def needmail(func):
         uid = req.session.get('uid')
         if uid:
             user = User.objects.filter(id__exact=uid)
+            user = user[0]
             if not user.emailVerified:
                 return HttpResponse(json.dumps({"error": "邮箱未验证！"}))
         return func(*args, **kwargs)  # 2
