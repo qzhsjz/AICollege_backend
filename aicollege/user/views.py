@@ -374,6 +374,7 @@ def qq_login(request):
                 newuser = User(qq_name=qq_name, emailVerified=False, referrer=0, qq_picture=qq_picture)
                 newuser.save()
                 request.session['uid'] = newuser.id
+                request.session['qq_name'] = qq_name
                 user1_dic = model_to_dict(newuser)
                 response = HttpResponse(json.dumps(user1_dic))
                 return response
@@ -443,6 +444,7 @@ def wechat_login(request):
             newuser = User(wx_name=wx_name,emailVerified=False, referrer=0, wx_picture=wx_picture)
             newuser.save()
             request.session['uid'] = newuser.id
+            request.session['wx_name'] = wx_name
             user1_dic = model_to_dict(newuser)
             response = HttpResponse(json.dumps(user1_dic))
             return response
