@@ -211,15 +211,12 @@ def check_email(request):
 #检查邀请人的userID信息
 def check_id(request):
     if request.method == 'POST':
-        userform = UserForm(request.POST)
-        if userform.is_valid():
-            id = userform.cleaned_data['邀请码']
-
-            user = User.objects.filter(id__exact=id)
-            if user:
-                return json.dumps(user)
-            else:
-                return HttpResponse(json.dumps({'error': '查无此人！'}))
+        id = request.POST['invite_id']
+        user = User.objects.filter(id__exact=id)
+        if user:
+            return json.dumps(user)
+        else:
+            return HttpResponse(json.dumps({'error': '查无此人！'}))
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
