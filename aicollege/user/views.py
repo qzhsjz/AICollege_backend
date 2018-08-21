@@ -193,13 +193,17 @@ def check_username(request):
 #检查注册邮箱
 def check_email(request):
     if request.method == 'POST':
-        userform = UserForm(request.POST)
-        if userform.is_valid():
-            email = userform.cleaned_data['email']
-
-            user2 = User.objects.filter(email__exact=email)
-            if user2:
-                return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
+        try:
+            email = request.POST['email']
+        except KeyError:
+            return  HttpResponse(json.dumps({'error': '邮箱不能为空！'}))
+        try:
+            validate_email(email)
+        except ValidationError:
+            return HttpResponse(json.dumps({'error': '邮箱格式语法错误！'}))
+        user2 = User.objects.filter(email__exact=email)
+        if user2:
+            return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
