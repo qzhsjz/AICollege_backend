@@ -460,12 +460,12 @@ def cart(request):
         if request.method == 'GET':
             user = User.objects.filter(id__exact=request.session['uid'])
             user = user[0]
-            response = HttpResponse(user.cart.decode('utf-8'))
+            response = HttpResponse(user.cart)
             return response
         elif request.method == 'POST':
             user = User.objects.filter(id__exact=request.session['uid'])
             user = user[0]
-            user.cart = request.body
+            user.cart = request.body.decode('utf-8')
             user.save()
             return HttpResponse(json.dumps({"success": "OK"}))
         else:
