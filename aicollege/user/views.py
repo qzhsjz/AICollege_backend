@@ -458,7 +458,7 @@ def cart(request):
         if request.method == 'GET':
             user = User.objects.filter(id__exact=request.session['uid'])
             user = user[0]
-            response = HttpResponse(user.cart)
+            response = HttpResponse(json.dumps(user.cart))
             return response
         elif request.method == 'POST':
             user = User.objects.filter(id__exact=request.session['uid'])
