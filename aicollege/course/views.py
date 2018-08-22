@@ -116,17 +116,6 @@ def judgeCourse(request, cid):
         f = False
 
     dict = {}
-    if f:
-        if course:
-            dict['islearn'] = True
-        else:
-            #dict['islearn'] = False
-            dict = {'error': '课程未购买'}
-            return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
-    else:
-        #dict['islearn'] = False
-        dict = {'error': '课程未购买'}
-        return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
     #dic = []
     course1 = Course.objects.filter(id=cid)[0]
@@ -153,6 +142,18 @@ def judgeCourse(request, cid):
     dict['section'] = section1
 
     print(dict)
+
+    if f:
+        if course:
+            dict['islearn'] = True
+        else:
+            #dict['islearn'] = False
+            dict = {'error': '课程未购买'}
+            return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
+    else:
+        #dict['islearn'] = False
+        dict = {'error': '课程未购买'}
+        return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
