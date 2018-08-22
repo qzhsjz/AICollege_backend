@@ -37,9 +37,18 @@ class User(models.Model):
     # 购物车
     cart = models.TextField()
 
+
 #Teacher,Student 扩展类
 class Teacher(User):
     job_title = models.CharField(max_length = 255)
 
+
 class Student(User):
     admission_time = models.DateTimeField('date published')
+
+
+#user表的外键，用于保存用户邀请的人的ID
+class InviteUser(models.Model):
+    invite_id = models.AutoField(primary_key=True)
+    # 邀请人
+    user = models.ForeignKey(User,on_delete=models.CASCADE)

@@ -469,6 +469,9 @@ def wechat_login(request):
     else:
         return HttpResponse(json.dumps({"error": "请求不合法！"}))
 
+
+#
+
 def cart(request):
     print(request.COOKIES)
     print(request.session.get('uid'))
