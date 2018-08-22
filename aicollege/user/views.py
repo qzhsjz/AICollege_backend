@@ -333,7 +333,7 @@ def getInviteId(request):
                 data = {}
                 user = InviteUser.objects.value()
                 data['list'] = list(user)
-                return HttpResponse(data)
+                return HttpResponse(json.dumps(data))
         else:
             return HttpResponse(json.dumps({'error': '请求不合法！'}))
     except KeyError:
