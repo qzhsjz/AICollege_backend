@@ -67,6 +67,7 @@ def needmail(func):
         return func(*args, **kwargs)  # 2
     return inner
 
+@needmail
 def login(request):
     print(request.COOKIES)
     if request.method == 'GET':
