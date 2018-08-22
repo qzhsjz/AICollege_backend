@@ -2,6 +2,7 @@ from django.shortcuts import render,render_to_response
 from django import forms
 from django.http import HttpResponse
 from .models import User
+from .models import InviteUser
 from django.template import loader
 import json
 from django.core.mail import send_mail as osdmail
@@ -164,6 +165,10 @@ def regist(request):
         print(a)
         print(mailbody)
 
+        #更新InviteUser表
+        newinviteuser = InviteUser(inviteid=newuser.id,user=refer)
+        newinviteuser.save()
+
         return HttpResponse(json.dumps({'success': '注册成功！'}))
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
@@ -296,7 +301,6 @@ def changeinfo(request):
 
 
 #根据session返回数据
-@needmail
 def getdata(request):
     try:
         if(request.method == 'GET'):
@@ -310,6 +314,26 @@ def getdata(request):
                 return response
             else:
                 return HttpResponse(json.dumps({'error': '无此用户！'}))
+        else:
+            return HttpResponse(json.dumps({'error': '请求不合法！'}))
+    except KeyError:
+        return HttpResponse(json.dumps({'message': 'Session出错（禁用Cookie）或新用户'}))
+
+
+# 根据sessio传来的ID来查询该用户所推荐的人
+@needmail
+def getInviteId(request):
+    try:
+        if(request.method == 'GET'):
+            uid = request.session['uid']
+            user = InviteUser.objects.filter(user__exact=uid)
+            if len(user) == 0:
+                return HttpResponse(json.dumps({'error': '该用户没有推荐其他用户！'}))
+            else:
+                data = {}
+                user = InviteUser.objects.value()
+                data['list'] = list(user)
+                return HttpResponse(json.dumps(data))
         else:
             return HttpResponse(json.dumps({'error': '请求不合法！'}))
     except KeyError:
@@ -468,6 +492,7 @@ def wechat_login(request):
             return response
     else:
         return HttpResponse(json.dumps({"error": "请求不合法！"}))
+
 
 def cart(request):
     print(request.COOKIES)

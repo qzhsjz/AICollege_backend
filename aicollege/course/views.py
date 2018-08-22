@@ -1,9 +1,23 @@
 # Create your views here.
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponse
+import json
 from .models import Course, Section
 from django.db.models import Q
 from user.models import User
 from django.forms.models import model_to_dict
+
+def needmail(func):
+    def inner(*args, **kwargs):  # 1
+        req = args[0]
+        uid = req.session.get('uid')
+        if uid:
+            user = User.objects.filter(id__exact=uid)
+            user = user[0]
+            if not user.emailVerified:
+                return HttpResponse(json.dumps({"error": "邮箱未验证！"}))
+        return func(*args, **kwargs)  # 2
+    return inner
+
 
 ##进入初始界面的时候，根据用户ID和推送算法，加载课程信息
 # 根据需求返回课程信息
@@ -82,6 +96,7 @@ def getCourseInfo(request, page):
 
 
 # 返回用户购买课程列表，根据uid（所有课程的表）
+@needmail
 def getCourseInfoUid(request, page):
     print(request.COOKIES)
     try:
@@ -103,7 +118,7 @@ def getCourseInfoUid(request, page):
 #        raise Http404("课程小节加载失败")
 #    return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
 
-
+@needmail
 def judgeCourse(request, cid):
     print(request.COOKIES)
     f = False
@@ -158,6 +173,7 @@ def judgeCourse(request, cid):
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
 
+@needmail
 def addCourse(request, cid):
     uid = request.session['uid']
     user = User.objects.get(id=int(uid))
@@ -197,6 +213,7 @@ def keySearch(request):
 
 
 #获取一条评论,参数为字典类型，包含sid和str
+@needmail
 def addEvaluation(request):
     uid = request.session['uid']
     sid = request.GET['sid']  #篇id
@@ -222,6 +239,7 @@ def addEvaluation(request):
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
 #返回一小节对应的所有评论
+@needmail
 def getEvaluation(request,sid):
     try:
         section = Section.objects.get(id = sid)
