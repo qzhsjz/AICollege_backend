@@ -165,8 +165,9 @@ def addCourse(request, cid):
     dict = {'Success':'授权成功'}
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
-def keySearch(request,key):
+def keySearch(request):
 
+    key = request.GET['key']
     if not key:
         dict = {'Error': '未购买此课程！'}
         return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
