@@ -1,5 +1,6 @@
 # Create your views here.
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponse
+import json
 from .models import Course, Section
 from django.db.models import Q
 from user.models import User
