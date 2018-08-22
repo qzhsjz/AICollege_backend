@@ -144,23 +144,22 @@ def judgeCourse(request, cid):
     #dic.append(model_to_dict(course1))
     dict['course'] = dic2
 
-    section = Section.objects.filter(course__id=course1.id).select_related()
-    section1 = []
-    dict['length'] = len(section)
-    for o in section:
-        # 把Object对象转换成Dict
-        dic1={}
-        dic1['section_id'] = o.id
-        dic1['section_name'] = o.section_name
-        dic1['videoPath'] = o.videoPath
-        section1.append(dic1)
-    dict['section'] = section1
-
     print(dict)
 
     if f:
         if course:
             dict['islearn'] = True
+            section = Section.objects.filter(course__id=course1.id).select_related()
+            section1 = []
+            dict['length'] = len(section)
+            for o in section:
+                # 把Object对象转换成Dict
+                dic1 = {}
+                dic1['section_id'] = o.id
+                dic1['section_name'] = o.section_name
+                dic1['videoPath'] = o.videoPath
+                section1.append(dic1)
+            dict['section'] = section1
         else:
             #dict['islearn'] = False
             dict = {'error': '课程未购买'}
