@@ -192,7 +192,7 @@ def keySearch(request):
     try:
         #查询课程名 | 查询教师
         post_list = Course.objects.filter(Q(course_name__icontains = key) | Q(teacherName__icontains = key))
-        course1 = []
+#        course1 = []
 
         obj_dic['length'] = len(post_list) #查找结果个数
         for o in post_list:
@@ -205,6 +205,8 @@ def keySearch(request):
             dic1['teacherName'] = o.teacherName
             dic1['picPath'] = o.picPath
             course1.append(dic1)
+
+        obj_dic['courseinfo'] = dic1
 
     except Course.DoesNotExist:  ##Course 表查找失败
         raise Http404("课程加载失败")
