@@ -17,4 +17,5 @@ urlpatterns = [
     path('shopcar', views.cart),
     path('QQlogin', views.qq_login),
     path('wxlogin', views.wechat_login),
+    path('getinviteid', views.getInviteId),
 ]
