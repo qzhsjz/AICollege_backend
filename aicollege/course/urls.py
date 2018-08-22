@@ -10,7 +10,7 @@ urlpatterns = [
     path('<int:cid>',views.judgeCourse),
     #path('<int:course_id>', views.getSectionInfoUCid),
     path('addtostudy/<int:cid>',views.addCourse),
-    path(r'^keysearch/(?P<key>\w+)/$',views.keySearch),
+    path('keysearch',views.keySearch),
     path('addEvaluation',views.addEvaluation),
     path('getevaluation/<int:sid>',views.getEvaluation),
 ]
