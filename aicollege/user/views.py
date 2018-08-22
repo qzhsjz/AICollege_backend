@@ -54,6 +54,18 @@ def index(request):
     return HttpResponse(template.render(request))
 
 
+def needmail(func):
+    def inner(*args, **kwargs):  # 1
+        req = args[0]
+        uid = req.session.get('uid')
+        if uid:
+            user = User.objects.filter(id__exact=uid)
+            user = user[0]
+            if not user.emailVerified:
+                return HttpResponse(json.dumps({"error": "邮箱未验证！"}))
+        return func(*args, **kwargs)  # 2
+    return inner
+
 def login(request):
     print(request.COOKIES)
     if request.method == 'GET':
@@ -204,6 +216,8 @@ def check_email(request):
         user2 = User.objects.filter(email__exact=email)
         if user2:
             return HttpResponse(json.dumps({'error': '邮箱已注册！'}))
+        else:
+            return HttpResponse(json.dumps({'true': '邮箱可以注册！'}))
     else:
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
@@ -221,6 +235,7 @@ def check_id(request):
         return HttpResponse(json.dumps({'error': '请求不合法！'}))
 
 #上传头像
+@needmail
 def input_pic(request):
     if(request.method == 'POST'):
         inputpic = request.FILES['input_pic']
@@ -240,6 +255,7 @@ def input_pic(request):
 
 
 #修改信息
+@needmail
 def changeinfo(request):
     if(request.method == 'POST'):
         #try:
@@ -280,6 +296,7 @@ def changeinfo(request):
 
 
 #根据session返回数据
+@needmail
 def getdata(request):
     try:
         if(request.method == 'GET'):
