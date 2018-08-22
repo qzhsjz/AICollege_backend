@@ -301,7 +301,6 @@ def changeinfo(request):
 
 
 #根据session返回数据
-@needmail
 def getdata(request):
     try:
         if(request.method == 'GET'):
@@ -322,6 +321,7 @@ def getdata(request):
 
 
 # 根据sessio传来的ID来查询该用户所推荐的人
+@needmail
 def getInviteId(request):
     try:
         if(request.method == 'GET'):
