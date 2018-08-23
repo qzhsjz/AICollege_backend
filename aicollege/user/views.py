@@ -12,6 +12,7 @@ from django.forms.models import model_to_dict
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
+from django.forms.models import model_to_dict
 import threading
 from urllib import request,parse
 import urllib
@@ -328,13 +329,17 @@ def getInviteId(request):
         if(request.method == 'GET'):
             uid = request.session['uid']
             #user = InviteUser.objects.filter(user__exact=uid)
-            user = User.objects.filter(referrer__exact=uid).all()
-            if len(user) == 0:
+            users = User.objects.filter(referrer__exact=uid).all()
+            if len(users) == 0:
                 return HttpResponse(json.dumps({'error': '该用户没有推荐其他用户！'}))
             else:
                 data = {}
                 # user = InviteUser.objects.value()
-                data['list'] = list(user)
+                lst = []
+                for user in users:
+                    user = model_to_dict(user)
+                    lst.append(user)
+                data['list'] = lst
                 return HttpResponse(json.dumps(data))
         else:
             return HttpResponse(json.dumps({'error': '请求不合法！'}))
