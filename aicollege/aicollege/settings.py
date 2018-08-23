@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'course',
     'forum',
     'index',
+    'message',
     'corsheaders',
 ]
 
