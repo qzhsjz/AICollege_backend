@@ -326,7 +326,8 @@ def getInviteId(request):
     try:
         if(request.method == 'GET'):
             uid = request.session['uid']
-            user = InviteUser.objects.filter(user__exact=uid)
+            #user = InviteUser.objects.filter(user__exact=uid)
+            user = User.objects.get(id__exact=uid).test.all()
             if len(user) == 0:
                 return HttpResponse(json.dumps({'error': '该用户没有推荐其他用户！'}))
             else:
