@@ -330,7 +330,7 @@ def getInviteId(request):
             uid = request.session['uid']
             #user = InviteUser.objects.filter(user__exact=uid)
             users = User.objects.filter(referrer__exact=uid).all()
-            if len(user) == 0:
+            if len(users) == 0:
                 return HttpResponse(json.dumps({'error': '该用户没有推荐其他用户！'}))
             else:
                 data = {}
