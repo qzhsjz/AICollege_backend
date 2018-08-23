@@ -121,13 +121,13 @@ def getCourseInfoUid(request, page):
 #    return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
 
 @needmail
-def judgeCourse(request, cid):
+def judgeCourse(request,cid):
     print(request.COOKIES)
     f = False
     try:
         uid = request.session['uid']
-        user = User.objects.filter(id=int(uid))[0]
-        course = Course.objects.filter(id=int(cid), user__id=user.id).select_related()  # 选取uid的所有课程
+        user = User.objects.filter(id = int(uid))[0]
+        course = Course.objects.filter(id = int(cid), user__id = user.id).select_related()  # 选取uid的所有课程
         f = True
     except KeyError:
         f = False
@@ -135,7 +135,7 @@ def judgeCourse(request, cid):
     dict = {}
 
     #dic = []
-    course1 = Course.objects.filter(id=int(id))[0]
+    course1 = Course.objects.filter(id = int(cid))[0]
     dic2 = {}
     dic2['id'] = course1.id
     dic2['course_name'] = course1.course_name
