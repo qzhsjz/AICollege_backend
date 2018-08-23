@@ -25,7 +25,6 @@ def needmail(func):
 # 根据需求返回课程信息
 
 # 搜索算法搜索课程
-@needmail
 def searchCourse(uid, page):
     if uid == -1:
         course = Course.objects.all()  # 选取所有的课程
