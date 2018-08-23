@@ -6,19 +6,6 @@ from django.db.models import Q
 from user.models import User
 from django.forms.models import model_to_dict
 
-def needmail(func):
-    def inner(*args, **kwargs):  # 1
-        req = args[0]
-        uid = req.session.get('uid')
-        if uid:
-            user = User.objects.filter(id__exact=uid)
-            user = user[0]
-            if not user.emailVerified:
-                return HttpResponse(json.dumps({"error": "邮箱未验证！"}))
-        return func(*args, **kwargs)  # 2
-    return inner
-
-
 ##进入初始界面的时候，根据用户ID和推送算法，加载课程信息
 # 根据需求返回课程信息
 
@@ -96,7 +83,6 @@ def getCourseInfo(request, page):
 
 
 # 返回用户购买课程列表，根据uid（所有课程的表）
-@needmail
 def getCourseInfoUid(request, page):
     print(request.COOKIES)
     try:
@@ -118,7 +104,6 @@ def getCourseInfoUid(request, page):
 #        raise Http404("课程小节加载失败")
 #    return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
 
-@needmail
 def judgeCourse(request, cid):
     print(request.COOKIES)
     f = False
@@ -131,17 +116,6 @@ def judgeCourse(request, cid):
         f = False
 
     dict = {}
-    if f:
-        if course:
-            dict['islearn'] = True
-        else:
-            #dict['islearn'] = False
-            dict = {'error': '课程未购买'}
-            return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
-    else:
-        #dict['islearn'] = False
-        dict = {'error': '课程未购买'}
-        return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
     #dic = []
     course1 = Course.objects.filter(id=cid)[0]
@@ -155,24 +129,34 @@ def judgeCourse(request, cid):
     #dic.append(model_to_dict(course1))
     dict['course'] = dic2
 
-    section = Section.objects.filter(course__id=course1.id).select_related()
-    section1 = []
-    dict['length'] = len(section)
-    for o in section:
-        # 把Object对象转换成Dict
-        dic1={}
-        dic1['section_id'] = o.id
-        dic1['section_name'] = o.section_name
-        dic1['videoPath'] = o.videoPath
-        section1.append(dic1)
-    dict['section'] = section1
-
     print(dict)
+
+    if f:
+        if course:
+            dict['islearn'] = True
+            section = Section.objects.filter(course__id=course1.id).select_related()
+            section1 = []
+            dict['length'] = len(section)
+            for o in section:
+                # 把Object对象转换成Dict
+                dic1 = {}
+                dic1['section_id'] = o.id
+                dic1['section_name'] = o.section_name
+                dic1['videoPath'] = o.videoPath
+                section1.append(dic1)
+            dict['section'] = section1
+        else:
+            #dict['islearn'] = False
+            dict = {'error': '课程未购买'}
+            return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
+    else:
+        #dict['islearn'] = False
+        dict = {'error': '课程未购买'}
+        return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
 
-@needmail
 def addCourse(request, cid):
     uid = request.session['uid']
     user = User.objects.get(id=int(uid))
@@ -206,13 +190,14 @@ def keySearch(request):
             dic1['picPath'] = o.picPath
             course1.append(dic1)
 
+        obj_dic['courseinfo'] = course1
+
     except Course.DoesNotExist:  ##Course 表查找失败
         raise Http404("课程加载失败")
     return JsonResponse(obj_dic, safe=False, json_dumps_params={'ensure_ascii': False})
 
 
 #获取一条评论,参数为字典类型，包含sid和str
-@needmail
 def addEvaluation(request):
     uid = request.session['uid']
     sid = request.GET['sid']  #篇id
@@ -238,7 +223,6 @@ def addEvaluation(request):
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
 #返回一小节对应的所有评论
-@needmail
 def getEvaluation(request,sid):
     try:
         section = Section.objects.get(id = sid)
