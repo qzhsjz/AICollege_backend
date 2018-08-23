@@ -123,19 +123,24 @@ def getCourseInfoUid(request, page):
 @needmail
 def judgeCourse(request,cid):
     print(request.COOKIES)
+
     f = False
     try:
         uid = request.session['uid']
-        user = User.objects.filter(id = int(uid))[0]
+        user = User.objects.get(id=int(uid))
         course = Course.objects.filter(id = int(cid), user__id = user.id).select_related()  # 选取uid的所有课程
         f = True
-    except KeyError:
+    except Course.DoesNotExist:
         f = False
 
     dict = {}
 
     #dic = []
-    course1 = Course.objects.filter(id = int(cid))[0]
+    try:
+        course1 = Course.objects.get(id = int(cid))
+    except Course.DoesNotExist:
+        raise Http404("课程不存在")
+
     dic2 = {}
     dic2['id'] = course1.id
     dic2['course_name'] = course1.course_name
