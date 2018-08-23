@@ -151,7 +151,7 @@ def judgeCourse(request, cid):
     if f:
         if course:
             dict['islearn'] = True
-            section = Section.objects.filter(course__id=course1.id).select_related()
+            section = Section.objects.filter(course__id = course1.id).select_related()
             section1 = []
             dict['length'] = len(section)
             for o in section:
