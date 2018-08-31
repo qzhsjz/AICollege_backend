@@ -132,6 +132,8 @@ def judgeCourse(request,cid):
         f = True
     except Course.DoesNotExist:
         f = False
+    except KeyError:
+        return JsonResponse({'error': '用户未登录'}, safe=False, json_dumps_params={'ensure_ascii': False})
 
     dict = {}
 
@@ -139,7 +141,8 @@ def judgeCourse(request,cid):
     try:
         course1 = Course.objects.get(id = int(cid))
     except Course.DoesNotExist:
-        raise Http404("课程不存在")
+        dict = {'error': '课程不存在'}
+        return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
     dic2 = {}
     dic2['id'] = course1.id
