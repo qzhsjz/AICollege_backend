@@ -169,11 +169,11 @@ def judgeCourse(request,cid):
             dict['section'] = section1
         else:
             #dict['islearn'] = False
-            dict = {'error': '课程未购买'}
+            dict['error']= '课程未购买'
             return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
     else:
         #dict['islearn'] = False
-        dict = {'error': '课程未购买'}
+        dict = {'error': '课程不存在'}
         return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
 
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
