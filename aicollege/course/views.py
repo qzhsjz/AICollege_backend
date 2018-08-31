@@ -168,8 +168,8 @@ def judgeCourse(request,cid):
                 section1.append(dic1)
             dict['section'] = section1
         else:
-            #dict['islearn'] = False
-            dict['error']= '课程未购买'
+            dict['islearn'] = False
+            #dict['error'] = '课程未购买'
             return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
     else:
         #dict['islearn'] = False
