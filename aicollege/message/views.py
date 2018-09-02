@@ -12,8 +12,8 @@ def getmsg(request):
     if request.method == 'GET':
         uid = request.session.get('uid')
         user = User.objects.get(id__exact=uid)
-        ancmt = Announcement.objects.filter(receiver__exact=user).all()
-        msg = Message.objects.filter(receiver__exact=user).all()
+        ancmt = Announcement.objects.filter(receiver_id__exact=user.id).all()
+        msg = Message.objects.filter(receiver_id__exact=user.id).all()
         return HttpResponse(json.dumps({'Announcement': list(ancmt), 'Message': list(msg)}))
     else:
         return HttpResponse(json.dumps({"error": "请求不合法！"}))
