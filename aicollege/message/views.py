@@ -12,7 +12,7 @@ def getmsg(request):
     if request.method == 'GET':
         uid = request.session.get('uid')
         user = User.objects.get(id__exact=uid)
-        ancmt = Announcement.objects.filter(receiver=user).all()
+        ancmt = Announcement.objects.all()
         # ancmt = user.Announcement_set.all()
         msg = Message.objects.filter(receiver=user).all()
         # msg = user.Message_set.all()
