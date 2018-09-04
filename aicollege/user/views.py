@@ -167,9 +167,9 @@ def regist(request):
         print(a)
         print(mailbody)
 
-        #更新InviteUser表
-        newinviteuser = InviteUser(inviteid=newuser.id,user=refer)
-        newinviteuser.save()
+        # #更新InviteUser表
+        # newinviteuser = InviteUser(inviteid=newuser.id,user=refer)
+        # newinviteuser.save()
 
         return HttpResponse(json.dumps({'success': '注册成功！'}))
     else:
