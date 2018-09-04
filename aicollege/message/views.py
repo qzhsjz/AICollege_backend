@@ -8,6 +8,7 @@ import json
 
 # Create your views here.
 
+TimeFormat = '%B是你的谎言,于%d日星期%w %X'
 
 def getmsg(request):
     if request.method == 'GET':
@@ -19,7 +20,7 @@ def getmsg(request):
             a.append({
                 'subject': ancmt.subject,
                 'content': ancmt.cotent,
-                'time': ancmt.time.isoformat(),
+                'time': ancmt.time.strftime(TimeFormat),
                 'id': ancmt.id,
             })
         # ancmt = user.Announcement_set.all()
@@ -30,7 +31,7 @@ def getmsg(request):
                 'sendername': msg.sender.username,
                 'subject': msg.subject,
                 'content': msg.content,
-                'time': msg.time.isoformat(),
+                'time': msg.time.strftime(TimeFormat),
                 'id': msg.id,
             })
         # msg = user.Message_set.all()
