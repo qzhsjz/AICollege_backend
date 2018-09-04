@@ -19,7 +19,7 @@ def getmsg(request):
             a.append({
                 'subject': ancmt.subject,
                 'content': ancmt.cotent,
-                'time': ancmt.time,
+                'time': ancmt.time.isoformat(),
                 'id': ancmt.id,
             })
         # ancmt = user.Announcement_set.all()
@@ -30,7 +30,7 @@ def getmsg(request):
                 'sendername': msg.sender.username,
                 'subject': msg.subject,
                 'content': msg.content,
-                'time': msg.time,
+                'time': msg.time.isoformat(),
                 'id': msg.id,
             })
         # msg = user.Message_set.all()
