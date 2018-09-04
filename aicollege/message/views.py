@@ -18,7 +18,7 @@ def getmsg(request):
         msgs = Message.objects.filter(receiver=user).all()
         msgs = [model_to_dict(msg) for msg in msgs]
         for msg in msgs:
-            msg['sendername'] = User.objects.get(id=ancmt['sender']).username
+            msg['sendername'] = User.objects.get(id=msg['sender']).username
             del msg['sender']
             del msg['receiver']
         # msg = user.Message_set.all()
