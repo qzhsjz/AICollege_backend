@@ -27,7 +27,7 @@ def getmsg(request):
         m = []
         for msg in msgs:
             m.append({
-                'sendername': User.objects.get(id=msg.sender).username,
+                'sendername': msg.sender.username,
                 'subject': msg.subject,
                 'content': msg.content,
                 'time': msg.time,
