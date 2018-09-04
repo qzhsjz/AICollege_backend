@@ -133,7 +133,8 @@ def judgeCourse(request,cid):
     except Course.DoesNotExist:
         f = False
     except KeyError:
-        return JsonResponse({'error': '用户未登录'}, safe=False, json_dumps_params={'ensure_ascii': False})
+        f = False
+        # return JsonResponse({'error': '用户未登录'}, safe=False, json_dumps_params={'ensure_ascii': False})
 
     dict = {}
 
