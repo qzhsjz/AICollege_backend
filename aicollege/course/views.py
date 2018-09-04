@@ -201,7 +201,7 @@ def keySearch(request):
     obj_dic = {}
     try:
         #查询课程名 | 查询教师
-        post_list = Course.objects.filter(Q(course_name__icontains = key) | Q(teacherName__icontains = key))
+        post_list = Course.objects.filter(Q(course_name__icontains = key) | Q(teacherName__icontains = key) | Q(course_info__icontains = key))
         course1 = []
 
         obj_dic['length'] = len(post_list) #查找结果个数
