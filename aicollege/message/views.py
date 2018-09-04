@@ -13,11 +13,11 @@ def getmsg(request):
     if request.method == 'GET':
         uid = request.session.get('uid')
         user = User.objects.get(id__exact=uid)
-        ancmt = model_to_dict(Announcement.objects.all())
+        ancmts = Announcement.objects.all()
         # ancmt = user.Announcement_set.all()
-        msg = model_to_dict(Message.objects.filter(receiver=user).all())
+        msgs = Message.objects.filter(receiver=user).all()
         # msg = user.Message_set.all()
-        return HttpResponse(json.dumps({'Announcement': list(ancmt), 'Message': list(msg)}))
+        return HttpResponse(json.dumps({'Announcement': [model_to_dict(ancmt) for ancmt in ancmts], 'Message': [model_to_dict(msg) for msg in msgs]}))
     else:
         return HttpResponse(json.dumps({"error": "请求不合法！"}))
 
