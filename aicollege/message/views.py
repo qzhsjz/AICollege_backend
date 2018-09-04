@@ -16,8 +16,13 @@ def getmsg(request):
         ancmts = Announcement.objects.all()
         # ancmt = user.Announcement_set.all()
         msgs = Message.objects.filter(receiver=user).all()
+        msgs = [model_to_dict(msg) for msg in msgs]
+        for msg in msgs:
+            msg['sendername'] = User.objects.get(id=ancmt['sender']).username
+            del msg['sender']
+            del msg['receiver']
         # msg = user.Message_set.all()
-        return HttpResponse(json.dumps({'Announcement': [model_to_dict(ancmt) for ancmt in ancmts], 'Message': [model_to_dict(msg) for msg in msgs]}))
+        return HttpResponse(json.dumps({'Announcement': [model_to_dict(ancmt) for ancmt in ancmts], 'Message': msgs}))
     else:
         return HttpResponse(json.dumps({"error": "请求不合法！"}))
 
