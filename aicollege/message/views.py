@@ -3,13 +3,15 @@ from .models import *
 from user.models import User
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
-import json
+import json, random
 
 
 # Create your views here.
 
-# TimeFormat = '%B是你的谎言,于%d日%A %X'
 TimeFormat = '%c'
+# 彩蛋
+if random.random() > 0.8:
+    TimeFormat = '%B是你的谎言,于%d日%A %X'
 
 def getmsg(request):
     if request.method == 'GET':
