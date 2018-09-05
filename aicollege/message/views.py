@@ -8,8 +8,8 @@ import json
 
 # Create your views here.
 
-# TimeFormat = '%B是你的谎言,于%d日星期%w %X'
-TimeFormat = '%c'
+TimeFormat = '%B是你的谎言,于%d日%A %X'
+# TimeFormat = '%c'
 
 def getmsg(request):
     if request.method == 'GET':
