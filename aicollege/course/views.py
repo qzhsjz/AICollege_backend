@@ -47,7 +47,7 @@ def searchCourse(uid, page):
         course1.append(dic1)
     len1 = max(9, len(course1))
 
-    obj_dic['data'] = course1[(page - 1) * 9:9]
+    obj_dic['data'] = course1[(page - 1) * 9:page * 9]
     return obj_dic
 
 
