@@ -347,6 +347,29 @@ def getInviteId(request):
         return HttpResponse(json.dumps({'message': 'Session出错（禁用Cookie）或新用户'}))
 
 
+#找回密码
+def findpassword(request):
+    if(request.method == 'GET'):
+        uid = request.session['uid']
+        user = User.objects.filter(id__exact=uid)
+        user = user[0]
+        if user:
+            password = user.password
+            email = user.email
+            name = user.username
+            hostname = '39.106.19.27:8080'
+            #verifyurl = "http://" + hostname + "/user/emailverify?code=" + code + '&username=' + username
+            mailbody = "您好，"+name+"!<br>你的密码是 ："+password+"<br>如果不是本人操作，请忽略此邮件"
+            # a = send_mail(subject='小智课堂注册确认', body='', html=mailbody, from_email='aicollege@126.com', recipient_list=[email])
+            a = osdmail(subject='小智课堂找回密码', message='', html_message=mailbody, from_email='aicollege@126.com',
+                    recipient_list=[email])
+            return HttpResponse(json.dumps({'true': '找回密码邮件发送成功！'}))
+        else:
+            return HttpResponse(json.dumps({'error': '无此用户！'}))
+    else:
+        return HttpResponse(json.dumps({'error': '请求不合法！'}))
+
+
 #退出登录
 def logout(request):
     if(request.method == 'GET'):
