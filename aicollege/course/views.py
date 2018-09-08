@@ -1,7 +1,7 @@
 # Create your views here.
 from django.http import Http404, JsonResponse, HttpResponse
 import json
-from .models import Course, Section
+from .models import Course, Section, Discussion
 from django.db.models import Q
 from user.models import User
 from django.forms.models import model_to_dict
@@ -229,7 +229,8 @@ def keySearch(request):
 @needmail
 def addEvaluation(request):
     uid = request.session['uid']
-    sid = request.GET['sid']  #篇id
+    sid = request.POST['sid']  #篇id
+    rid = request.POST.get('reply')
 
     try:
         user = User.objects.get(id = int(uid))
@@ -239,14 +240,18 @@ def addEvaluation(request):
         section = Section.objects.get(id = int(sid))
     except Section.DoesNotExist:
         raise Http404("视频查找失败")
+    try:
+        reply = Discussion.objects.get(id = int(rid))
+    except Discussion.DoesNotExist:
+        raise Http404("不存在回复对象")
 
-    dic = {}
-    dic['uid'] = uid
-    dic['username'] = user.username
-    dic['userpic'] = user.picture
-    dic['str'] = request.GET['str']
-
-    section.evaluation.append(dic)
+    d = Discussion(
+        section=section,
+        publisher=user,
+        reply=reply if rid else None,
+        content = request.POST['content']
+    )
+    d.save()
     #pian1.length = pian1.length+1
     dict = {'Success': '添加成功'}
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
@@ -259,7 +264,19 @@ def getEvaluation(request,sid):
     except Section.DoesNotExist:
         raise Http404("此页查找失败")
     dict = {}
-    dic = section.evaluation
-    dict['length'] = len(dic)
-    dict['evaluation'] = dic
+    dis = section.discussion_set.all()
+    dislst = []
+    for d in dis:
+        dislst.append({
+            'id': d.id,
+            'reply_id': d.reply.id if d.reply else None,
+            'reply_username': d.reply.publisher.username if d.reply else None,
+            'reply_userpic': d.reply.publisher.picture if d.reply else None,
+            'reply_content': d.reply.content if d.reply else None,
+            'username': d.publisher.username,
+            'userpic': d.publisher.picture,
+            'content': d.content,
+        })
+    dict['length'] = len(dislst)
+    dict['evaluation'] = dislst
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
