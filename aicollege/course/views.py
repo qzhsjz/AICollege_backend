@@ -4,6 +4,7 @@ import json
 from .models import Course, Section, Discussion
 from django.db.models import Q
 from user.models import User
+from message.models import Message
 from django.forms.models import model_to_dict
 
 
@@ -240,10 +241,11 @@ def addEvaluation(request):
         section = Section.objects.get(id = int(sid))
     except Section.DoesNotExist:
         raise Http404("视频查找失败")
-    try:
-        reply = Discussion.objects.get(id = int(rid))
-    except Discussion.DoesNotExist:
-        raise Http404("不存在回复对象")
+    if rid:
+        try:
+            reply = Discussion.objects.get(id=int(rid))
+        except Discussion.DoesNotExist:
+            raise Http404("不存在回复对象")
 
     d = Discussion(
         section=section,
@@ -252,6 +254,13 @@ def addEvaluation(request):
         content = request.POST['content']
     )
     d.save()
+
+    if rid:
+        msg = Message(sender=user)
+        msg.receiver = reply.publisher
+        msg.subject = '用户' + user.username + '回复了你的消息：'
+        msg.content = request.POST['content']
+        msg.save()
     #pian1.length = pian1.length+1
     dict = {'Success': '添加成功'}
     return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
