@@ -14,7 +14,7 @@ from user.models import User
 class Forum(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
-    parent = models.ForeignKey('self', null=True)
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True)
     manager = models.ManyToManyField(User)
     picture = models.CharField(max_length=255)
     description = models.TextField()
