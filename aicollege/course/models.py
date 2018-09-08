@@ -28,7 +28,7 @@ class Section(models.Model):
     section_name = models.CharField(max_length = 255)
     section_info = models.TextField()          # 小节对应的课程信息
     section_data = models.DateTimeField('date published')
-    evaluation = []  # 评价数组，每个元素是个字典，字典中包含学生id和学生的评论
+    # evaluation = []  # 评价数组，每个元素是个字典，字典中包含学生id和学生的评论
     # pic = models.ImageField(upload_to='')
     picPath = models.CharField(max_length=255)  # 图片的路径
     videoPath = models.CharField(max_length=255)   # 视频的存储路径
