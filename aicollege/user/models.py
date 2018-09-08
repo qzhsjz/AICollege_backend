@@ -21,6 +21,8 @@ class User(models.Model):
     emailCode = models.CharField(max_length=64, default=0)
     #身份验证，是否为老师
     isTeacher = models.BooleanField(default=False)
+    # 身份验证，是否有权限管理论坛版块
+    isForumAdmin = models.BooleanField(default=False)
     #推荐人，通过用户ID来绑定
     referrer = models.IntegerField()
     #推荐人的数量

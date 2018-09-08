@@ -3,36 +3,54 @@ from django.shortcuts import render
 # Create your views here.
 from django.http import HttpResponse
 from django.http import Http404, JsonResponse
-from .models import pian
+from .models import *
+from user.models import User
 
-def test(request):
-    return HttpResponse("here.")
-
-#获取一条评论,参数为字典类型，包含pid和str
-#def addEvaluation(request,dic1):
-#    uid = request.session['uid']
-#    pid = dic1['pid']  #篇id
-#    dic = {}
-#    dic['uid'] = uid
-#    dic['evaluation'] = dic1['str']
-#    try:
-#        pian1 = pian.objects.get(id = pid)
-#    except pian.DoesNotExist:
-#        raise Http404("此页查找失败")
-#    pian1.evaluation.append(dic)
-#    #pian1.length = pian1.length+1
-#    dict = {'Success': '添加成功'}
-#    return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
-
-#返回一页的所有评论
-#def getEvaluation(request,pid):
-#    try:
-#        pian1 = pian.objects.get(id = pid)
-#    except pian.DoesNotExist:
-#        raise Http404("此页查找失败")
-#    dict = {}
-#    dic = pian1.evaluation
-#    #length = pian1.length
-#    dict['length'] = len(dic)
-#    dict['eva'] = dic
-#    return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
+def ctrl_forum(request):
+    if request.method == 'GET':
+        if request.GET.get('id'):
+            frmroot = Forum.objects.get(id=int(request.GET['id']))
+        else:
+            frmroot = None
+        child_set = Forum.objects.filter(parent=frmroot).all()
+        rtnlst = []
+        for child in child_set:
+            managers = child.manager.all()
+            mlst = []
+            for m in managers:
+                mlst.append({
+                    'uid': m.id,
+                    'username': m.username,
+                    'picture': m.picture,
+                })
+            rtnlst.append({
+                'id': child.id,
+                'name': child.name,
+                'picture': child.picture,
+                'parent_id': frmroot.id if frmroot else None,
+                'manager_list': mlst,
+            })
+        return JsonResponse(rtnlst, safe=False, json_dumps_params={'ensure_ascii': False})
+    elif request.method == 'POST':
+        if request.session.get('uid'):
+            uid = request.session.get('uid')
+            user = User.objects.get(id=uid)
+            if user.isForumAdmin:
+                if request.POST.get('id'):
+                    try:
+                        frm = Forum.objects.get(id=int(request.POST['id']))
+                    except Forum.DoesNotExist:
+                        return JsonResponse({'error': '不存在编号为' + request.POST['id'] + '的版块'}, safe=False, json_dumps_params={'ensure_ascii': False})
+                else:
+                    frm = Forum()
+                if request.POST.get('name'):
+                    frm.name = request.POST['name']
+                if request.POST.get('description'):
+                    frm.description = request.POST['description']
+                # TODO: 这里需要设计如何更改版主、更改版块图片以及更改上级版块。
+            else:
+                return JsonResponse({'error': '用户无权限'}, safe=False, json_dumps_params={'ensure_ascii': False})
+        else:
+            return JsonResponse({'error': '用户未登录'}, safe=False, json_dumps_params={'ensure_ascii': False})
+    else:
+        return JsonResponse({'error': '请求不合法'}, safe=False, json_dumps_params={'ensure_ascii': False})
