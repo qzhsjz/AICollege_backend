@@ -282,8 +282,8 @@ def getEvaluation(request,sid):
             'reply_username': d.reply.publisher.username if d.reply else None,
             'reply_userpic': d.reply.publisher.picture if d.reply else None,
             'reply_content': d.reply.content if d.reply else None,
-            'username': d.publisher.username,
-            'userpic': d.publisher.picture,
+            'username': d.publisher.username if d.publisher else '用户已注销',
+            'userpic': d.publisher.picture if d.publisher else '/img/RIP.jpg',
             'content': d.content,
         })
     dict['length'] = len(dislst)

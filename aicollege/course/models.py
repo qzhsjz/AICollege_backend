@@ -37,6 +37,6 @@ class Section(models.Model):
 class Discussion(models.Model):
     id = models.AutoField(primary_key=True)
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
-    publisher = models.ForeignKey(User, on_delete=models.SET(-1))  # 在用户被人间蒸发的时候，一定要区分出来并写上==数据删除==
+    publisher = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)  # 在用户被人间蒸发的时候，一定要区分出来并写上==数据删除==
     reply = models.ForeignKey('self', on_delete=models.SET(-1), null=True)  # 在原评论被删除的情况下，需要显示原评论已经删除。
     content = models.TextField()
