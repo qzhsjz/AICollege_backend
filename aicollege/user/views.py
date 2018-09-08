@@ -134,7 +134,12 @@ def regist(request):
             refer = int(refer)
             user = User.objects.filter(id__exact=refer)
             if user:
-                pass
+                user.countRefer=user.countRefer+1
+                if user.countRefer>=5:
+                    user.isVIP = True
+                    #发消息提醒用户
+
+                #pass
             else:
                 return HttpResponse(json.dumps({'error': '查无此人！'}))
         except KeyError:

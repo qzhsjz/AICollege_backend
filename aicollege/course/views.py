@@ -128,7 +128,7 @@ def judgeCourse(request,cid):
     try:
         uid = request.session['uid']
         user = User.objects.get(id=int(uid))
-        course = Course.objects.filter(id = int(cid), user__id = user.id).select_related()  # 选取uid的所有课程
+        course = Course.objects.filter(id=int(cid), user__id=user.id).select_related()  # 选取uid的所有课程
         f = True
     except Course.DoesNotExist:
         f = False

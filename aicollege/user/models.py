@@ -23,6 +23,9 @@ class User(models.Model):
     isTeacher = models.BooleanField(default=False)
     #推荐人，通过用户ID来绑定
     referrer = models.IntegerField()
+    #推荐人的数量
+    countRefer = models.ImageField(default=0)
+    isVIP = models.BooleanField(default=False)
 
     #关联的QQ
     qq_openid = models.CharField(max_length=64)
