@@ -18,4 +18,5 @@ urlpatterns = [
     path('QQlogin', views.qq_login),
     path('wxlogin', views.wechat_login),
     path('getinviteid', views.getInviteId),
+    path('findpassword', views.findpassword),
 ]
