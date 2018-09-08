@@ -128,6 +128,7 @@ def judgeCourse(request,cid):
     try:
         uid = request.session['uid']
         user = User.objects.get(id=int(uid))
+        uvip = user.isVIP
         course = Course.objects.filter(id=int(cid), user__id=user.id).select_related()  # 选取uid的所有课程
         f = True
     except Course.DoesNotExist:
@@ -135,21 +136,21 @@ def judgeCourse(request,cid):
     except KeyError:
         f = False
         # return JsonResponse({'error': '用户未登录'}, safe=False, json_dumps_params={'ensure_ascii': False})
-
     dict = {}
-
-    #dic = []
     try:
         course1 = Course.objects.get(id = int(cid))
     except Course.DoesNotExist:
         dict = {'error': '课程不存在'}
         return JsonResponse(dict, safe=False, json_dumps_params={'ensure_ascii': False})
-
     dic2 = {}
     dic2['id'] = course1.id
     dic2['course_name'] = course1.course_name
     dic2['course_info'] = course1.course_info
-    dic2['course_price'] = course1.course_price
+
+    if uvip:
+        dic2['course_price'] = 0
+    else:
+        dic2['course_price'] = course1.course_price
     dic2['teacherName'] = course1.teacherName
     dic2['picPath'] = course1.picPath
     #dic.append(model_to_dict(course1))
