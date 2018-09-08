@@ -2,6 +2,7 @@ from django.shortcuts import render,render_to_response
 from django import forms
 from django.http import HttpResponse
 from .models import User
+from message.models import Message
 from .models import InviteUser
 from django.template import loader
 import json
@@ -138,7 +139,8 @@ def regist(request):
                 if user.countRefer>=5:
                     user.isVIP = True
                     #发消息提醒用户
-
+                    message = Message(sender=0, receiver=user, subject="升级会员通知" ,content="恭喜！您已经成为了小智学院的会员，畅享学院付费课程的免费观看特权！快去学习吧！")
+                    message.save()
                 #pass
             else:
                 return HttpResponse(json.dumps({'error': '查无此人！'}))
