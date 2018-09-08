@@ -24,7 +24,7 @@ class User(models.Model):
     #推荐人，通过用户ID来绑定
     referrer = models.IntegerField()
     #推荐人的数量
-    countRefer = models.ImageField(default=0)
+    countRefer = models.IntegerField(default=0)
     isVIP = models.BooleanField(default=False)
 
     #关联的QQ
