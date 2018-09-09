@@ -133,9 +133,9 @@ def regist(request):
             #nonlocal rfer
             refer = request.POST['refer_id']
             refer = int(refer)
-            user = User.objects.filter(id__exact=refer)
+            user = User.objects.get(id__exact=refer)
             if user:
-                user.countRefer=user.countRefer+1
+                user.countRefer += 1
                 if user.countRefer>=5:
                     user.isVIP = True
                     user.save()
