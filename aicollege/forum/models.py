@@ -23,6 +23,7 @@ class Forum(models.Model):
 class Thread(models.Model):
     id = models.AutoField(primary_key=True)
     forum = models.ForeignKey(Forum, on_delete=models.SET_NULL, null=True)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True)
     subject = models.CharField(max_length=255)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     time_published = models.DateTimeField(auto_now_add=True)

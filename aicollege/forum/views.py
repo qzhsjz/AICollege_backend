@@ -54,3 +54,33 @@ def ctrl_forum(request):
             return JsonResponse({'error': '用户未登录'}, safe=False, json_dumps_params={'ensure_ascii': False})
     else:
         return JsonResponse({'error': '请求不合法'}, safe=False, json_dumps_params={'ensure_ascii': False})
+
+def ctrl_thread(request):
+    if request.method == 'GET':
+        if request.GET.get('id'):
+            t = Thread.objects.get(id=int(request.GET['id']))
+        else:
+            return JsonResponse({'error': '未指定帖子id'}, safe=False, json_dumps_params={'ensure_ascii': False})
+        child_set = Thread.objects.filter(parent=t).all()
+        reply_lst = []
+        for child in child_set:
+            reply_lst.append({
+                'id': child.id,
+            })
+        rtn_obj = {
+            'id': t.id,
+        }
+        return JsonResponse(rtn_obj, safe=False, json_dumps_params={'ensure_ascii': False})
+    elif request.method == 'POST':
+        if request.session.get('uid'):
+            uid = request.session.get('uid')
+            user = User.objects.get(id=uid)
+            if request.POST.get('id'):
+                t = Thread.objects.get(id=int(request.POST['id']))
+            else:
+                t = Thread()
+            # TODO: 对帖子的各种操作
+        else:
+            return JsonResponse({'error': '用户未登录'}, safe=False, json_dumps_params={'ensure_ascii': False})
+    else:
+        return JsonResponse({'error': '请求不合法'}, safe=False, json_dumps_params={'ensure_ascii': False})
