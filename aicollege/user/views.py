@@ -139,7 +139,7 @@ def regist(request):
             if user.countRefer>=5:
                 user.isVIP = True
                 #发消息提醒用户
-                message = Message(sender=User.objects.get(id=0), receiver=user, subject="升级会员通知" ,content="恭喜！您已经成为了小智学院的会员，畅享学院付费课程的免费观看特权！快去学习吧！")
+                message = Message(sender=User.objects.get(id=1), receiver=user, subject="升级会员通知" ,content="恭喜！您已经成为了小智学院的会员，畅享学院付费课程的免费观看特权！快去学习吧！")
                 message.save()
             user.save()
         else:
