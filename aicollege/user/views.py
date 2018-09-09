@@ -129,26 +129,22 @@ def regist(request):
                 return HttpResponse(json.dumps({'error':'邮箱格式不正确'}))
         except KeyError:
             return  HttpResponse(json.dumps({'error': '邮箱不能为空！'}))
-        try:
-            #nonlocal rfer
-            refer = request.POST['refer_id']
-            refer = int(refer)
-            user = User.objects.get(id__exact=refer)
-            if user:
-                user.countRefer += 1
-                if user.countRefer>=5:
-                    user.isVIP = True
-                    user.save()
-                    #发消息提醒用户
-                    message = Message(sender=0, receiver=user, subject="升级会员通知" ,content="恭喜！您已经成为了小智学院的会员，畅享学院付费课程的免费观看特权！快去学习吧！")
-                    message.save()
-                #pass
-            else:
-                return HttpResponse(json.dumps({'error': '查无此人！'}))
-        except KeyError:
-            pass
-        except ValueError:
-            pass
+
+        #nonlocal rfer
+        refer = request.POST['refer_id']
+        refer = int(refer)
+        user = User.objects.get(id__exact=refer)
+        if user:
+            user.countRefer += 1
+            if user.countRefer>=5:
+                user.isVIP = True
+                user.save()
+                #发消息提醒用户
+                message = Message(sender=User.objects.get(id=0), receiver=user, subject="升级会员通知" ,content="恭喜！您已经成为了小智学院的会员，畅享学院付费课程的免费观看特权！快去学习吧！")
+                message.save()
+            #pass
+        else:
+            return HttpResponse(json.dumps({'error': '查无此人！'}))
 
         user1 = User.objects.filter(username__exact=username)
         user2 = User.objects.filter(email__exact=email)
