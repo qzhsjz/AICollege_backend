@@ -147,11 +147,7 @@ def judgeCourse(request,cid):
     dic2['id'] = course1.id
     dic2['course_name'] = course1.course_name
     dic2['course_info'] = course1.course_info
-
-    if uvip:
-        dic2['course_price'] = 0
-    else:
-        dic2['course_price'] = course1.course_price
+    dic2['course_price'] = course1.course_price
     dic2['teacherName'] = course1.teacherName
     dic2['picPath'] = course1.picPath
     #dic.append(model_to_dict(course1))
@@ -160,6 +156,8 @@ def judgeCourse(request,cid):
     print(dict)
 
     if f:
+        if uvip:
+            dic2['course_price'] = 0
         if course:
             dict['islearn'] = True
             section = Section.objects.filter(course__id = course1.id).select_related()
