@@ -42,7 +42,6 @@ class DownloadTicket(models.Model):
     id = models.AutoField(primary_key=True)
     target = models.ForeignKey(Attachment, on_delete=models.CASCADE)
     secret = models.CharField(max_length=64)
-    ipv4 = models.IPAddressField(protocol="ipv4")
-    ipv6 = models.IPAddressField(protocol="ipv6")
+    ip = models.GenericIPAddressField(protocol="both")
     count = models.IntegerField(default=0)
     expired_time = models.DateTimeField()
